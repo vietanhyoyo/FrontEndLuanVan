@@ -20,8 +20,8 @@ const Content = () => {
 
     const contentStyle = {
         marginTop: "10px",
-        paddingRight: "30px",
-        paddingLeft: "30px"
+        paddingRight: "0px",
+        paddingLeft: "0px"
     }
 
     const titleStyle = {

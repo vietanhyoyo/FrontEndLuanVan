@@ -10,6 +10,7 @@ import AuthCardWrapper from '../AuthCardWrapper';
 import AuthLogin from '../auth-forms/AuthLogin';
 import Logo from 'ui-component/Logo';
 import AuthFooter from 'ui-component/cards/AuthFooter';
+import LoginLogo from 'assets/images/logoLogin.png'
 
 // assets
 
@@ -30,7 +31,7 @@ const Login = () => {
                                 <Grid container spacing={2} alignItems="center" justifyContent="center">
                                     <Grid item sx={{ mb: 3 }}>
                                         <Link to="#">
-                                            <Logo />
+                                            <img alt="login" src={LoginLogo} width="200"/>
                                         </Link>
                                     </Grid>
                                     <Grid item xs={12}>
@@ -39,6 +40,7 @@ const Login = () => {
                                             direction={matchDownSM ? 'column-reverse' : 'row'}
                                             alignItems="center"
                                             justifyContent="center"
+                                            marginTop={-5}
                                         >
                                             <Grid item>
                                                 <Stack alignItems="center" justifyContent="center" spacing={1}>
@@ -48,7 +50,7 @@ const Login = () => {
                                                         variant={matchDownSM ? 'h3' : 'h2'}
                                                         textAlign={'center'}
                                                     >
-                                                        Trường Tiểu học Lê Quý Đôn
+                                                        Trường Tiểu Học Lê Quý Đôn
                                                     </Typography>
                                                     <Typography
                                                         variant="caption"
