@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -7,18 +6,15 @@ import {
     Box,
     Button,
     Checkbox,
-    Divider,
     FormControl,
     FormControlLabel,
     FormHelperText,
-    Grid,
     IconButton,
     InputAdornment,
     InputLabel,
     OutlinedInput,
     Stack,
-    Typography,
-    useMediaQuery
+    Typography
 } from '@mui/material';
 
 // third party
@@ -33,20 +29,17 @@ import AnimateButton from 'ui-component/extended/AnimateButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
-import Google from 'assets/images/icons/social-google.svg';
+import { useNavigate } from 'react-router';
 
 // ============================|| FIREBASE - LOGIN ||============================ //
 
 const FirebaseLogin = ({ ...others }) => {
+
+    const navigate = useNavigate();
+
     const theme = useTheme();
     const scriptedRef = useScriptRef();
-    const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
-    const customization = useSelector((state) => state.customization);
     const [checked, setChecked] = useState(true);
-
-    const googleHandler = async () => {
-        console.error('Login');
-    };
 
     const [showPassword, setShowPassword] = useState(false);
     const handleClickShowPassword = () => {
@@ -57,67 +50,13 @@ const FirebaseLogin = ({ ...others }) => {
         event.preventDefault();
     };
 
+    const handleLogin = () => {
+        console.log("submit to dashboard");
+        navigate('/student/home')
+    }
+
     return (
         <>
-            <Grid container direction="column" justifyContent="center" spacing={2}>
-                <Grid item xs={12}>
-                    <AnimateButton>
-                        <Button
-                            disableElevation
-                            fullWidth
-                            onClick={googleHandler}
-                            size="large"
-                            variant="outlined"
-                            sx={{
-                                color: 'grey.700',
-                                backgroundColor: theme.palette.grey[50],
-                                borderColor: theme.palette.grey[100]
-                            }}
-                        >
-                            <Box sx={{ mr: { xs: 1, sm: 2, width: 20 } }}>
-                                <img src={Google} alt="google" width={16} height={16} style={{ marginRight: matchDownSM ? 8 : 16 }} />
-                            </Box>
-                            Sign in with Google
-                        </Button>
-                    </AnimateButton>
-                </Grid>
-                <Grid item xs={12}>
-                    <Box
-                        sx={{
-                            alignItems: 'center',
-                            display: 'flex'
-                        }}
-                    >
-                        <Divider sx={{ flexGrow: 1 }} orientation="horizontal" />
-
-                        <Button
-                            variant="outlined"
-                            sx={{
-                                cursor: 'unset',
-                                m: 2,
-                                py: 0.5,
-                                px: 7,
-                                borderColor: `${theme.palette.grey[100]} !important`,
-                                color: `${theme.palette.grey[900]}!important`,
-                                fontWeight: 500,
-                                borderRadius: `${customization.borderRadius}px`
-                            }}
-                            disableRipple
-                            disabled
-                        >
-                            OR
-                        </Button>
-
-                        <Divider sx={{ flexGrow: 1 }} orientation="horizontal" />
-                    </Box>
-                </Grid>
-                <Grid item xs={12} container alignItems="center" justifyContent="center">
-                    <Box sx={{ mb: 2 }}>
-                        <Typography variant="subtitle1">Sign in with Email address</Typography>
-                    </Box>
-                </Grid>
-            </Grid>
-
             <Formik
                 initialValues={{
                     email: 'info@codedthemes.com',
@@ -133,6 +72,7 @@ const FirebaseLogin = ({ ...others }) => {
                         if (scriptedRef.current) {
                             setStatus({ success: true });
                             setSubmitting(false);
+                            console.log('Dang nhap');
                         }
                     } catch (err) {
                         console.error(err);
@@ -144,10 +84,13 @@ const FirebaseLogin = ({ ...others }) => {
                     }
                 }}
             >
-                {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
-                    <form noValidate onSubmit={handleSubmit} {...others}>
+                {({ errors, handleBlur, handleChange, isSubmitting, touched, values }) => (
+                    <form noValidate onSubmit={(e) => {
+                        e.preventDefault();
+                        handleLogin();
+                    }} {...others}>
                         <FormControl fullWidth error={Boolean(touched.email && errors.email)} sx={{ ...theme.typography.customInput }}>
-                            <InputLabel htmlFor="outlined-adornment-email-login">Email Address / Username</InputLabel>
+                            <InputLabel htmlFor="outlined-adornment-email-login">Tài khoản</InputLabel>
                             <OutlinedInput
                                 id="outlined-adornment-email-login"
                                 type="email"
@@ -155,12 +98,12 @@ const FirebaseLogin = ({ ...others }) => {
                                 name="email"
                                 onBlur={handleBlur}
                                 onChange={handleChange}
-                                label="Email Address / Username"
+                                label="Tài khoản"
                                 inputProps={{}}
                             />
                             {touched.email && errors.email && (
                                 <FormHelperText error id="standard-weight-helper-text-email-login">
-                                    {errors.email}
+                                    Bạn chưa điền tài khoản
                                 </FormHelperText>
                             )}
                         </FormControl>
@@ -170,7 +113,7 @@ const FirebaseLogin = ({ ...others }) => {
                             error={Boolean(touched.password && errors.password)}
                             sx={{ ...theme.typography.customInput }}
                         >
-                            <InputLabel htmlFor="outlined-adornment-password-login">Password</InputLabel>
+                            <InputLabel htmlFor="outlined-adornment-password-login">Mật khẩu</InputLabel>
                             <OutlinedInput
                                 id="outlined-adornment-password-login"
                                 type={showPassword ? 'text' : 'password'}
@@ -191,12 +134,12 @@ const FirebaseLogin = ({ ...others }) => {
                                         </IconButton>
                                     </InputAdornment>
                                 }
-                                label="Password"
+                                label="Mật khẩu"
                                 inputProps={{}}
                             />
                             {touched.password && errors.password && (
                                 <FormHelperText error id="standard-weight-helper-text-password-login">
-                                    {errors.password}
+                                    Bạn chưa điền mật khẩu
                                 </FormHelperText>
                             )}
                         </FormControl>
@@ -210,10 +153,10 @@ const FirebaseLogin = ({ ...others }) => {
                                         color="primary"
                                     />
                                 }
-                                label="Remember me"
+                                label="Ghi nhớ đăng nhập"
                             />
                             <Typography variant="subtitle1" color="secondary" sx={{ textDecoration: 'none', cursor: 'pointer' }}>
-                                Forgot Password?
+                                Quên mật khẩu?
                             </Typography>
                         </Stack>
                         {errors.submit && (
@@ -233,7 +176,7 @@ const FirebaseLogin = ({ ...others }) => {
                                     variant="contained"
                                     color="secondary"
                                 >
-                                    Sign in
+                                    Đăng nhập
                                 </Button>
                             </AnimateButton>
                         </Box>

@@ -16,6 +16,7 @@ import AuthFooter from 'ui-component/cards/AuthFooter';
 // ================================|| AUTH3 - LOGIN ||================================ //
 
 const Login = () => {
+
     const theme = useTheme();
     const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -45,15 +46,17 @@ const Login = () => {
                                                         color={theme.palette.secondary.main}
                                                         gutterBottom
                                                         variant={matchDownSM ? 'h3' : 'h2'}
+                                                        textAlign={'center'}
                                                     >
-                                                        Hi, Welcome Back
+                                                        Trường Tiểu học Lê Quý Đôn
                                                     </Typography>
                                                     <Typography
                                                         variant="caption"
-                                                        fontSize="16px"
-                                                        textAlign={matchDownSM ? 'center' : 'inherit'}
+                                                        fontSize="14px"
+                                                        textAlign={'center'}
+                                                        width={260}
                                                     >
-                                                        Enter your credentials to continue
+                                                        Bạn vui lòng nhập tài khoản và mật khẩu để sử dụng hệ thống
                                                     </Typography>
                                                 </Stack>
                                             </Grid>
@@ -64,18 +67,6 @@ const Login = () => {
                                     </Grid>
                                     <Grid item xs={12}>
                                         <Divider />
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <Grid item container direction="column" alignItems="center" xs={12}>
-                                            <Typography
-                                                component={Link}
-                                                to="/pages/register/register3"
-                                                variant="subtitle1"
-                                                sx={{ textDecoration: 'none' }}
-                                            >
-                                                Don&apos;t have an account?
-                                            </Typography>
-                                        </Grid>
                                     </Grid>
                                 </Grid>
                             </AuthCardWrapper>

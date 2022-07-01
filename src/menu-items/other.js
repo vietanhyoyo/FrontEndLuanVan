@@ -1,8 +1,16 @@
 // assets
-import { IconBrandChrome, IconHelp } from '@tabler/icons';
+import {
+    IconBrandChrome,
+    IconHelp,
+    IconHome
+} from '@tabler/icons';
 
 // constant
-const icons = { IconBrandChrome, IconHelp };
+const icons = {
+    IconBrandChrome,
+    IconHelp,
+    IconHome
+};
 
 // ==============================|| SAMPLE PAGE & DOCUMENTATION MENU ITEMS ||============================== //
 
@@ -26,6 +34,14 @@ const other = {
             icon: icons.IconHelp,
             external: true,
             target: true
+        },
+        {
+            id: 'student-home',
+            title: 'Home',
+            type: 'item',
+            url: '/student/home',
+            icon: icons.IconHome,
+            breadcrumbs: false
         }
     ]
 };
