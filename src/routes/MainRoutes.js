@@ -15,9 +15,12 @@ const UtilsMaterialIcons = Loadable(lazy(() => import('views/utilities/MaterialI
 const UtilsTablerIcons = Loadable(lazy(() => import('views/utilities/TablerIcons')));
 
 // sample page routing
-const SamplePage = Loadable(lazy(() => import('views/sample-page')));
-const StudentHome = Loadable(lazy(() => import('views/student/StudentHome')))
-
+const SamplePage = Loadable(lazy(() => import('views/sample-page')))
+const AdminAccount = Loadable(lazy(() => import('views/admin/AdminAccount')))
+const TeacherAccount = Loadable(lazy(() => import('views/admin/TeacherAccount')))
+const StudentAccount = Loadable(lazy(() => import('views/admin/StudentAccount')))
+const AdminProfile = Loadable(lazy(() => import('views/admin/AdminProflie')))
+const ClassManager = Loadable(lazy(() => import('views/admin/ClassManager')))
 // ==============================|| MAIN ROUTING ||============================== //
 
 const MainRoutes = {
@@ -57,8 +60,24 @@ const MainRoutes = {
             element: <SamplePage />
         },
         {
-            path: '/student/home',
-            element: <StudentHome />
+            path: '/manager/admin',
+            element: <AdminAccount />
+        },
+        {
+            path: '/manager/teacher',
+            element: <TeacherAccount />
+        },
+        {
+            path: '/manager/student',
+            element: <StudentAccount />
+        },
+        {
+            path: '/manager/profile',
+            element: <AdminProfile />
+        },
+        {
+            path: '/manager/class',
+            element: <ClassManager />
         }
     ]
 };

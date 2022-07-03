@@ -3,14 +3,14 @@ import { Grid, Typography } from '@mui/material';
 
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
-import LabelCard from './student-elements/LabelCard';
-import Schedule from './student-elements/Schedule';
-import New from './student-elements/New'
+import LabelCard from './student-home/LabelCard';
+import Schedule from './student-home/Schedule';
+import New from './student-home/New'
 // material-ui
 import { styled, useTheme } from '@mui/material/styles';
 
 import { gridSpacing } from 'store/constant';
-import Content from './student-elements/Content';
+import Content from './student-home/Content';
 
 // ==============================|| SAMPLE PAGE ||============================== //
 

@@ -1,10 +1,9 @@
 import PropTypes from 'prop-types';
 
 // material-ui
-import { styled, useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import {
-    Avatar, Box, List, ListItem, Badge,
-    ListItemAvatar, ListItemText, Typography, Stack
+    Box, List, Badge, Typography
 }
     from '@mui/material';
 
@@ -70,7 +69,7 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 }));
 
 const AnimateText = styled(Typography)(({ theme }) => ({
-    animation: 'tiptak 1.2s infinite linear',
+    animation: 'tiptak 1s infinite linear',
     '@keyframes tiptak': {
         '0%': {
             color: theme.palette.grey[50]
@@ -90,7 +89,6 @@ const AnimateText = styled(Typography)(({ theme }) => ({
 // ==============================|| DASHBOARD - TOTAL INCOME DARK CARD ||============================== //
 
 const LabelCard = ({ isLoading }) => {
-    const theme = useTheme();
 
     return (
         <>

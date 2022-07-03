@@ -1,18 +1,17 @@
 
-// project imports
-import MainCard from 'ui-component/cards/MainCard';
 
 import * as React from 'react';
 import {
     Table, TableBody, TableCell, TableContainer, TableHead,
-    TableRow, Paper, Tooltip, AccordionDetails,
-    Grid, Typography, Accordion, AccordionSummary, Box
+    TableRow, AccordionDetails,
+    Typography, Accordion, AccordionSummary, Box
 } from '@mui/material';
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import ScheduleHover from './ScheduleHover';
 import { useTheme } from '@emotion/react';
+import { useSelector } from 'react-redux';
 
 function createData(number, monday, tuesday, wednesday, thursday, friday) {
     return { number, monday, tuesday, wednesday, thursday, friday };
@@ -38,10 +37,11 @@ const rows = [
 
 const Schedule = () => {
     const theme = useTheme();
+    const customization = useSelector((state) => state.customization);
 
     return (<>
         <Box sx={{
-            borderRadius: '12px',
+            borderRadius: `${customization.borderRadius}px`,
             backgroundColor: theme.palette.background.paper,
             borderWidth: '1px',
             borderStyle: 'solid',

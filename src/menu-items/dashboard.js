@@ -1,22 +1,30 @@
 // assets
-import { IconDashboard } from '@tabler/icons';
+import { IconDashboard, IconWindow } from '@tabler/icons';
 
 // constant
-const icons = { IconDashboard };
+const icons = { IconDashboard, IconWindow };
 
 // ==============================|| DASHBOARD MENU ITEMS ||============================== //
 
 const dashboard = {
     id: 'dashboard',
-    title: 'Dashboard',
+    title: 'Quản lý',
     type: 'group',
     children: [
         {
             id: 'default',
-            title: 'Dashboard',
+            title: 'Thống kê',
             type: 'item',
             url: '/dashboard',
             icon: icons.IconDashboard,
+            breadcrumbs: false
+        },
+        {
+            id: 'classroom',
+            title: 'Lớp học',
+            type: 'item',
+            url: '/manager/class',
+            icon: icons.IconWindow,
             breadcrumbs: false
         }
     ]

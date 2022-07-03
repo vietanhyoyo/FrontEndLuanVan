@@ -1,4 +1,4 @@
-import { Box, Typography, Avatar, Tooltip } from "@mui/material"
+import { Box, Typography, Avatar } from "@mui/material"
 import { useTheme } from "@mui/system";
 
 const New = () => {
