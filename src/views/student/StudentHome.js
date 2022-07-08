@@ -3,7 +3,7 @@ import { Grid, Typography } from '@mui/material';
 
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
-import LabelCard from './student-home/LabelCard';
+import LabelCard from 'ui-component/class/LabelCard'
 import Schedule from './student-home/Schedule';
 import New from './student-home/New'
 // material-ui
