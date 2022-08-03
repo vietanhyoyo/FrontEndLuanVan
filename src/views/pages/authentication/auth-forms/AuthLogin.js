@@ -30,12 +30,19 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 import { useNavigate } from 'react-router';
+import axios from 'axios';
 
 // ============================|| FIREBASE - LOGIN ||============================ //
 
 const FirebaseLogin = ({ ...others }) => {
 
     const navigate = useNavigate();
+    const [account, setAccount] = useState({
+        username: "",
+        password: ""
+    })
+
+    console.log(account)
 
     const theme = useTheme();
     const scriptedRef = useScriptRef();
@@ -51,8 +58,16 @@ const FirebaseLogin = ({ ...others }) => {
     };
 
     const handleLogin = () => {
-        console.log("submit to dashboard");
-        navigate('/student/home')
+        axios.post("http://localhost:5000/author/login", account)
+        .then(res => res.data)
+        .then(res => {
+            console.log(res);
+        })
+        .catch(err => {
+            console.log(err);
+        })
+
+        //navigate('/student/home')
     }
 
     return (
@@ -64,7 +79,7 @@ const FirebaseLogin = ({ ...others }) => {
                     submit: null
                 }}
                 validationSchema={Yup.object().shape({
-                    email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
+                    email: Yup.string().max(255).required('Email is required'),
                     password: Yup.string().max(255).required('Password is required')
                 })}
                 onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
@@ -94,10 +109,15 @@ const FirebaseLogin = ({ ...others }) => {
                             <OutlinedInput
                                 id="outlined-adornment-email-login"
                                 type="email"
-                                value={values.email}
+                                value={account.username}
                                 name="email"
                                 onBlur={handleBlur}
-                                onChange={handleChange}
+                                onChange={(event) => {
+                                    setAccount(prev => ({
+                                        ...prev,
+                                        username: event.target.value
+                                    }))
+                                }}
                                 label="Tài khoản"
                                 inputProps={{}}
                             />
@@ -117,10 +137,15 @@ const FirebaseLogin = ({ ...others }) => {
                             <OutlinedInput
                                 id="outlined-adornment-password-login"
                                 type={showPassword ? 'text' : 'password'}
-                                value={values.password}
+                                value={account.password}
                                 name="password"
                                 onBlur={handleBlur}
-                                onChange={handleChange}
+                                onChange={(event) => {
+                                    setAccount(prev => ({
+                                        ...prev,
+                                        password: event.target.value
+                                    }))
+                                }}
                                 endAdornment={
                                     <InputAdornment position="end">
                                         <IconButton
