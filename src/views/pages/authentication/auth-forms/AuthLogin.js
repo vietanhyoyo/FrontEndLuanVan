@@ -42,8 +42,6 @@ const FirebaseLogin = ({ ...others }) => {
         password: ""
     })
 
-    console.log(account)
-
     const theme = useTheme();
     const scriptedRef = useScriptRef();
     const [checked, setChecked] = useState(true);
@@ -57,17 +55,20 @@ const FirebaseLogin = ({ ...others }) => {
         event.preventDefault();
     };
 
+    console.log(process.env.REACT_APP_BASE_URL);
+
     const handleLogin = () => {
-        axios.post("http://localhost:5000/author/login", account)
+        axios.post(process.env.REACT_APP_BASE_URL + "/author/login", account)
         .then(res => res.data)
         .then(res => {
+            sessionStorage.setItem('ACCESS_TOKEN', res.accessToken);
             console.log(res);
+            navigate('/student/home')
         })
         .catch(err => {
             console.log(err);
         })
 
-        //navigate('/student/home')
     }
 
     return (

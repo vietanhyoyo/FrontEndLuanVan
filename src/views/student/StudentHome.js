@@ -11,6 +11,9 @@ import { styled, useTheme } from '@mui/material/styles';
 
 import { gridSpacing } from 'store/constant';
 import Content from './student-home/Content';
+import { useEffect } from 'react';
+import axios from 'axios';
+import HomeStudentService from 'services/homeStudent.service';
 
 // ==============================|| SAMPLE PAGE ||============================== //
 
@@ -21,35 +24,55 @@ const HiddenMiddle = styled('main')(({ theme }) => ({
     }
 }));
 
-const StudentHome = () => (
-    <Grid container spacing={gridSpacing} justifyContent="center">
-        <Grid item lg={10} md={10} sm={12} xs={12}>
-            <Grid container spacing={gridSpacing} justifyContent={"center"}>
-                <Grid item lg={8} md={12} sm={12} xs={12}>
-                    <Grid container spacing={gridSpacing}>
-                        <Grid item sm={12} xs={12} md={12} lg={12}>
-                            <LabelCard isLoading={false} />
-                        </Grid>
-                        <Grid item sm={12} xs={12} md={12} lg={12}>
-                            <Schedule />
-                        </Grid>
-                        <Grid item sm={12} xs={12} md={12} lg={12}>
-                            <MainCard title="Trang tin lớp học">
-                                <Content />
-                                <Content />
-                            </MainCard>
+const homeService = new HomeStudentService();
+
+const StudentHome = () => {
+
+    const getAPI = async () => {
+        try {
+            const result = await homeService.getData();
+            console.log(result.data);
+        } catch (error) {
+            console.log("Lỗi: " + error);
+        }
+    }
+
+    useEffect(() => {
+
+        getAPI();
+
+    }, [])
+
+    return (
+        <Grid container spacing={gridSpacing} justifyContent="center">
+            <Grid item lg={10} md={10} sm={12} xs={12}>
+                <Grid container spacing={gridSpacing} justifyContent={"center"}>
+                    <Grid item lg={8} md={12} sm={12} xs={12}>
+                        <Grid container spacing={gridSpacing}>
+                            <Grid item sm={12} xs={12} md={12} lg={12}>
+                                <LabelCard isLoading={false} />
+                            </Grid>
+                            <Grid item sm={12} xs={12} md={12} lg={12}>
+                                <Schedule />
+                            </Grid>
+                            <Grid item sm={12} xs={12} md={12} lg={12}>
+                                <MainCard title="Trang tin lớp học">
+                                    <Content />
+                                    <Content />
+                                </MainCard>
+                            </Grid>
                         </Grid>
                     </Grid>
-                </Grid>
-                <Grid item lg={4} md={12} sm={12} xs={12}>
-                    <MainCard title="Thông báo">
-                        <New />
-                        <New />
-                    </MainCard>
+                    <Grid item lg={4} md={12} sm={12} xs={12}>
+                        <MainCard title="Thông báo">
+                            <New />
+                            <New />
+                        </MainCard>
+                    </Grid>
                 </Grid>
             </Grid>
         </Grid>
-    </Grid>
-);
+    )
+};
 
 export default StudentHome;
