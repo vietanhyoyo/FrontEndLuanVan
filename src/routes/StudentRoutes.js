@@ -4,8 +4,8 @@ import { lazy } from 'react';
 import StudentLayout from 'layout/StudentLayout';
 import Loadable from 'ui-component/Loadable';
 
+import PrivateRoute from 'components/PrivateRoute';
 // sample page routing
-const SamplePage = Loadable(lazy(() => import('views/sample-page')));
 const StudentHome = Loadable(lazy(() => import('views/student/StudentHome')));
 const StudentProfile = Loadable(lazy(() => import('views/student/StudentProfile')));
 
@@ -13,7 +13,7 @@ const StudentProfile = Loadable(lazy(() => import('views/student/StudentProfile'
 
 const StudentRoutes = {
     path: '/',
-    element: <StudentLayout />,
+    element: <PrivateRoute><StudentLayout /></PrivateRoute>,
     children: [
         {
             path: '/student/home',

@@ -51,24 +51,45 @@ const FirebaseLogin = ({ ...others }) => {
         setShowPassword(!showPassword);
     };
 
+    const [errorAccount, setErrorAccount] = useState({
+        username: false,
+        password: false
+    })
+
     const handleMouseDownPassword = (event) => {
         event.preventDefault();
     };
 
-    console.log(process.env.REACT_APP_BASE_URL);
+    const validationAccount = () => {
+        let bool = true;
+        if (errorAccount.username) bool = false;
+        if (errorAccount.password) bool = false;
+        return bool;
+    }
 
+    //Su kien submit
     const handleLogin = () => {
-        axios.post(process.env.REACT_APP_BASE_URL + "/author/login", account)
-        .then(res => res.data)
-        .then(res => {
-            sessionStorage.setItem('ACCESS_TOKEN', res.accessToken);
-            console.log(res);
-            navigate('/student/home')
-        })
-        .catch(err => {
-            console.log(err);
-        })
 
+        if (!validationAccount()) {
+            alert('Thông tin chưa hợp lệ!');
+            return
+        }
+
+        axios.post(process.env.REACT_APP_BASE_URL + "/author/login", account)
+            .then(res => res.data)
+            .then(res => {
+                if (res.status === "Error") {
+                    console.log(res);
+                }
+                else {
+                    sessionStorage.setItem('ACCESS_TOKEN', res.accessToken);
+                    localStorage.setItem('REFRESH_TOKEN', res.refreshToken);
+                    navigate('/student/home')
+                }
+            })
+            .catch(err => {
+                console.log(err);
+            })
     }
 
     return (
@@ -105,14 +126,27 @@ const FirebaseLogin = ({ ...others }) => {
                         e.preventDefault();
                         handleLogin();
                     }} {...others}>
-                        <FormControl fullWidth error={Boolean(touched.email && errors.email)} sx={{ ...theme.typography.customInput }}>
+                        <FormControl fullWidth error={errorAccount.username} sx={{ ...theme.typography.customInput }}>
                             <InputLabel htmlFor="outlined-adornment-email-login">Tài khoản</InputLabel>
                             <OutlinedInput
                                 id="outlined-adornment-email-login"
                                 type="email"
                                 value={account.username}
                                 name="email"
-                                onBlur={handleBlur}
+                                onBlur={() => {
+                                    if (account.username === "") {
+                                        setErrorAccount(prev => ({
+                                            ...prev,
+                                            username: true
+                                        }))
+                                    }
+                                }}
+                                onFocus={() => {
+                                    setErrorAccount(prev => ({
+                                        ...prev,
+                                        username: false
+                                    }))
+                                }}
                                 onChange={(event) => {
                                     setAccount(prev => ({
                                         ...prev,
@@ -131,7 +165,7 @@ const FirebaseLogin = ({ ...others }) => {
 
                         <FormControl
                             fullWidth
-                            error={Boolean(touched.password && errors.password)}
+                            error={errorAccount.password}
                             sx={{ ...theme.typography.customInput }}
                         >
                             <InputLabel htmlFor="outlined-adornment-password-login">Mật khẩu</InputLabel>
@@ -140,7 +174,20 @@ const FirebaseLogin = ({ ...others }) => {
                                 type={showPassword ? 'text' : 'password'}
                                 value={account.password}
                                 name="password"
-                                onBlur={handleBlur}
+                                onBlur={() => {
+                                    if (account.password === "") {
+                                        setErrorAccount(prev => ({
+                                            ...prev,
+                                            password: true
+                                        }))
+                                    }
+                                }}
+                                onFocus={() => {
+                                    setErrorAccount(prev => ({
+                                        ...prev,
+                                        password: false
+                                    }))
+                                }}
                                 onChange={(event) => {
                                     setAccount(prev => ({
                                         ...prev,

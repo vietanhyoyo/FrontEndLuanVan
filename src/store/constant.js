@@ -5,15 +5,9 @@ export const appDrawerWidth = 320;
 
 export const StorageKeys = {
     ACCESS_TOKEN: "ACCESS_TOKEN",
+    REFRESH_TOKEN: "REFRESH_TOKEN"
 }
 
 export const ApiPath = {
-    SIGNIN: "/auth/signin",
-    UPDATE_ACCOUNT: "/user/update",
-    UPDATE_PASSWORD: "/auth/changePass",
-
-    // User report
-    USER_REPORT_TOTAL_TIME: "/userReport/total",
-    FILTER_USER_REPORT: "/userReport/filter",
-    DELETE_USER_REPORT: "/userReport/delete",
+    REFRESH_TOKEN: "/author/refresh-token"
 }

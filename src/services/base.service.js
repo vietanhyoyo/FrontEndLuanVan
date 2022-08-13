@@ -1,7 +1,7 @@
 import APIAccessor from "./apiProcessor"
 
 class BaseService {
-    api = APIAccessor;
+    api = new APIAccessor();
 }
 
 export default BaseService
