@@ -84,7 +84,10 @@ const FirebaseLogin = ({ ...others }) => {
                 else {
                     sessionStorage.setItem('ACCESS_TOKEN', res.accessToken);
                     localStorage.setItem('REFRESH_TOKEN', res.refreshToken);
-                    navigate('/student/home')
+                    if (res.role === 0)
+                        navigate('/dashboard')
+                    else
+                        navigate('/student/home')
                 }
             })
             .catch(err => {

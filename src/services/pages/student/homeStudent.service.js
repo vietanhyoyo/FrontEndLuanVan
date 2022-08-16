@@ -1,4 +1,4 @@
-const { default: BaseService } = require("./base.service")
+const { default: BaseService } = require("../../base.service")
 
 class HomeStudentService extends BaseService{
     getData = async () => {

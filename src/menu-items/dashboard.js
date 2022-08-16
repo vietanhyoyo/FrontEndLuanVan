@@ -20,12 +20,24 @@ const dashboard = {
             breadcrumbs: false
         },
         {
-            id: 'classroom',
-            title: 'Lớp học',
-            type: 'item',
-            url: '/manager/class',
+            id: 'school-class',
+            title: 'Lớp - học kì',
+            type: 'collapse',
             icon: icons.IconWindow,
-            breadcrumbs: false
+            children: [
+                {
+                    id: 'schoolyear',
+                    title: 'Năm học',
+                    type: 'item',
+                    url: '/manager/school-year',
+                },
+                {
+                    id: 'class',
+                    title: 'Lớp học',
+                    type: 'item',
+                    url: '/manager/class',
+                }
+            ]
         }
     ]
 };

@@ -12,8 +12,7 @@ import { styled, useTheme } from '@mui/material/styles';
 import { gridSpacing } from 'store/constant';
 import Content from './student-home/Content';
 import { useEffect } from 'react';
-import axios from 'axios';
-import HomeStudentService from 'services/homeStudent.service';
+import HomeStudentService from 'services/pages/student/homeStudent.service';
 
 // ==============================|| SAMPLE PAGE ||============================== //
 

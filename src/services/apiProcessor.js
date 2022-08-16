@@ -11,21 +11,40 @@ class APIProcessor {
 
 
 
-    // post: (path, data) => {
+    post = async (path, data) => {
 
-    //     const token = sessionStorage.getItem('ACCESS_TOKEN');
+        const token = sessionStorage.getItem(StorageKeys.ACCESS_TOKEN);
 
-    //     axios({
-    //         method: 'post',
-    //         url: process.env.REACT_APP_BASE_URL + path,
-    //         data: data,
-    //         headers: {
-    //             "Cache-Control": "no-cache",
-    //             "Content-Type": "application/json",
-    //             "Authorization": "Beaer" + token
-    //         }
-    //     });
-    // },
+        try {
+            const result = await axios({
+                method: 'post',
+                url: process.env.REACT_APP_BASE_URL + path,
+                data,
+                headers: {
+                    ...HEADERS,
+                    "Authorization": "Beaer " + token
+                }
+            })
+            return result;
+        }
+        catch (err) {
+            if (err.response.status === 403) {
+
+                const tokenResult = await this.getRefreshToken();
+
+                if (tokenResult.data.status === "Success") {
+                    this.setTokenItem(tokenResult.data.accessToken, tokenResult.data.refreshToken);
+                    return this.post(path, data);
+                }
+                else return tokenResult;
+            }
+            return err;
+        }
+    }
+
+    get = () => {
+        return 20;
+    }
 
     get = async (path) => {
 
