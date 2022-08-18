@@ -97,25 +97,23 @@ const SchoolYear = () => {
         ?
         <div>No data</div>
         :
-        <MainCard title={
-            <Button variant="contained" startIcon={<AddIcon />} onClick={addSchoolYear}>
-                Thêm năm học
-            </Button>}
-        >
-
+        <MainCard title={'Quản lý năm học'}>
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead>
                         <TableRow>
                             <TableCell>#</TableCell>
                             <TableCell align="left">Năm học</TableCell>
-                            <TableCell align="right"> </TableCell>
+                            <TableCell align="right">
+                                <Button variant="contained" startIcon={<AddIcon />} onClick={addSchoolYear}>
+                                    Thêm năm học
+                                </Button></TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {data.map((row, index) => (
                             <TableRow
-                                key={row.name}
+                                key={index}
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                             >
                                 <TableCell width={"30px"}>{index + 1}</TableCell>
