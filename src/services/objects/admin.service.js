@@ -11,6 +11,17 @@ class AdminService extends BaseService {
         const result = await this.api.get('/admin/admin-account');
         return result;
     }
+
+    editAccount = async (obj) => {
+        const result = await this.api.post('/admin/edit-account', obj);
+        return result;
+    }
+
+    deleteAccount = async (id) => {
+        const result = await this.api.post('/admin/delete-admin', { id });
+        return result;
+    }
+
 }
 
 export default AdminService;

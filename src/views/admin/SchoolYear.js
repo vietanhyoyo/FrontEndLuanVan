@@ -71,32 +71,30 @@ const SchoolYear = () => {
 
     const addSchoolYear = async () => {
         const text = prompt('Nhập tên năm học mới');
-        try {
-            const result = await classService.addSchoolYear(text);
-            if (result.data.status === "Error") {
-                setNotification({
-                    open: true,
-                    message: 'Thêm thất bại đã có lỗi!',
-                    status: 'error'
-                })
+        if (text !== '')
+            try {
+                const result = await classService.addSchoolYear(text);
+                if (result.data.status === "Error") {
+                    setNotification({
+                        open: true,
+                        message: 'Thêm thất bại đã có lỗi!',
+                        status: 'error'
+                    })
+                }
+                else {
+                    setNotification({
+                        open: true,
+                        message: 'Đã thêm 1 năm học mới',
+                        status: 'success'
+                    })
+                }
+                getAPI();
+            } catch (err) {
+                console.log(err);
             }
-            else {
-                setNotification({
-                    open: true,
-                    message: 'Đã thêm 1 năm học mới',
-                    status: 'success'
-                })
-            }
-            getAPI();
-        } catch (err) {
-            console.log(err);
-        }
     }
 
-    return data.length === 0
-        ?
-        <div>No data</div>
-        :
+    return (
         <MainCard title={'Quản lý năm học'}>
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -111,23 +109,33 @@ const SchoolYear = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {data.map((row, index) => (
+                        {data.length === 0
+                            ?
                             <TableRow
-                                key={index}
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                             >
-                                <TableCell width={"30px"}>{index + 1}</TableCell>
-                                <TableCell align="left">{row.name}</TableCell>
-                                <TableCell align="right">
-                                    <IconButton color="primary" component="span">
-                                        <EditIcon />
-                                    </IconButton>
-                                    <IconButton color="error" component="span" onClick={() => handleDeleteButton(row._id)}>
-                                        <DeleteIcon />
-                                    </IconButton>
-                                </TableCell>
+                                <TableCell width={"30px"}>No</TableCell>
+                                <TableCell align="left">No data</TableCell>
+                                <TableCell align="right">No data</TableCell>
                             </TableRow>
-                        ))}
+                            :
+                            data.map((row, index) => (
+                                <TableRow
+                                    key={index}
+                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                >
+                                    <TableCell width={"30px"}>{index + 1}</TableCell>
+                                    <TableCell align="left">{row.name}</TableCell>
+                                    <TableCell align="right">
+                                        <IconButton color="primary" component="span">
+                                            <EditIcon />
+                                        </IconButton>
+                                        <IconButton color="error" component="span" onClick={() => handleDeleteButton(row._id)}>
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
                     </TableBody>
                 </Table>
             </TableContainer>
@@ -136,7 +144,7 @@ const SchoolYear = () => {
                     {notification.message}
                 </Alert>
             </Snackbar>
-        </MainCard>
+        </MainCard>)
 };
 
 export default SchoolYear;

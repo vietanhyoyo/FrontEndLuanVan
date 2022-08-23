@@ -8,25 +8,47 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, forwardRef } from 'react';
 import {
     Table, TableBody, TableCell, TableContainer, DialogActions, TextField,
     TableHead, TableRow, Paper, Dialog, DialogTitle, Box, Button, DialogContent,
-    InputAdornment, InputLabel, FormControl, OutlinedInput, LinearProgress
+    InputAdornment, InputLabel, FormControl, OutlinedInput, LinearProgress,
+    Snackbar
 } from '@mui/material';
+
+import moment from 'moment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 import AdminService from 'services/objects/admin.service';
+import MuiAlert from '@mui/material/Alert';
+
+const Alert = forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const adminService = new AdminService();
 
 function formatDateVN(dateString) {
     const date = new Date(dateString);
     const string = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
-
     return string;
 }
+
+function formatInputDate(dateString) {
+    let date = new Date(Date.now());
+    if (dateString !== '')
+        date = new Date(dateString);
+    return moment(date).format('YYYY-MM-DD');
+}
+
+const offAutoComplete = {
+    autoComplete: 'new-password',
+    form: {
+        autoComplete: 'off',
+    },
+}
+
 // ==============================|| SAMPLE PAGE ||============================== //
 
 const AdminAccount = () => {
@@ -45,6 +67,18 @@ const AdminAccount = () => {
         password: '',
         name: '',
     });
+    const [notification, setNotification] = useState({
+        open: false,
+        message: 'Đã thêm 1 năm học mới!',
+        status: 'success'
+    })
+
+    const handleCloseAlert = () => {
+        setNotification(prev => ({
+            ...prev,
+            open: false
+        }))
+    }
 
     const handleClose = () => {
         setOpen(false)
@@ -59,11 +93,28 @@ const AdminAccount = () => {
         }
         try {
             const result = await adminService.addAdmin(newAccount);
-            getAPI();
-            console.log(result);
+            if (result.data.status === "Error") {
+                setNotification({
+                    open: true,
+                    message: result.data.message,
+                    status: 'error'
+                })
+            }
+            else {
+                getAPI();
+                console.log(result);
+                setNotification({
+                    open: true,
+                    message: 'Đã thay đổi!',
+                    status: 'success'
+                })
+            }
         } catch (error) {
             console.log(error)
         }
+        setNewAccount({
+            username: '', password: '', name: ''
+        })
         setOpen(false)
     }
 
@@ -79,7 +130,6 @@ const AdminAccount = () => {
         try {
             const result = await adminService.getAdminAccount();
             setAccountList(result.data);
-            console.log(result);
         } catch (error) {
             console.log(error)
         }
@@ -93,6 +143,58 @@ const AdminAccount = () => {
         setAccountSelect(accountList[index]);
         setOpenEdit(true);
     };
+
+    const handleSubmitEdit = async () => {
+        try {
+            const result = await adminService.editAccount(accountSelect);
+            console.log(result);
+            if (result.data.status === "Error") {
+                setNotification({
+                    open: true,
+                    message: result.data.message,
+                    status: 'error'
+                })
+            }
+            else {
+                getAPI();
+                setNotification({
+                    open: true,
+                    message: 'Đã thay đổi!',
+                    status: 'success'
+                })
+            }
+        } catch (error) {
+            console.log(error);
+        }
+        setOpenEdit(false);
+    };
+
+    const handleDeleteAccount = async (id) => {
+        const bool = window.confirm('Bạn có muốn xóa lớp này không?');
+        if (bool) {
+            try {
+                const result = await adminService.deleteAccount(id);
+                if (result.data.status === "Error") {
+                    setNotification({
+                        open: true,
+                        message: result.data.message,
+                        status: 'error'
+                    })
+                }
+                else {
+                    getAPI();
+                    setNotification({
+                        open: true,
+                        message: 'Đã xóa một tài khoản!',
+                        status: 'success'
+                    })
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        else return
+    }
 
     return accountList.length === 0
         ?
@@ -134,7 +236,7 @@ const AdminAccount = () => {
                                     <IconButton color="primary" component="span" onClick={() => handleEdit(index)}>
                                         <EditIcon />
                                     </IconButton>
-                                    <IconButton color="error" component="span">
+                                    <IconButton color="error" component="span" onClick={() => handleDeleteAccount(row._id)}>
                                         <DeleteIcon />
                                     </IconButton>
                                 </TableCell>
@@ -164,6 +266,7 @@ const AdminAccount = () => {
                                 username: event.target.value
                             }))}
                             autoComplete="off"
+                            inputProps={offAutoComplete}
                         />
                     </Box>
                     <Box mt={3}>
@@ -174,6 +277,7 @@ const AdminAccount = () => {
                                 id="adornment-password"
                                 type={showPassword ? 'text' : 'password'}
                                 value={newAccount.password}
+                                inputProps={offAutoComplete}
                                 onChange={(event) => setNewAccount(prev => ({
                                     ...prev,
                                     password: event.target.value
@@ -205,6 +309,7 @@ const AdminAccount = () => {
                                 name: event.target.value
                             }))}
                             autoComplete="off"
+                            inputProps={offAutoComplete}
                         />
                     </Box>
                 </DialogContent>
@@ -253,25 +358,33 @@ const AdminAccount = () => {
                     </Box>
                     <Box mt={3}>
                         <TextField
+                            id="date"
+                            label="Ngày sinh"
+                            type="date"
                             sx={{ width: '100%' }}
-                            label="Họ và tên"
-                            variant="outlined"
-                            value={accountSelect.name}
+                            value={accountSelect.birthday ? formatInputDate(accountSelect.birthday) : formatInputDate('')}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
                             onChange={(event) => setAccountSelect(prev => ({
                                 ...prev,
-                                name: event.target.value
+                                birthday: event.target.value
                             }))}
-                            autoComplete="off"
                         />
                     </Box>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setOpenEdit(false)}>Hủy</Button>
-                    <Button onClick={() => setOpenEdit(false)} autoFocus>
+                    <Button onClick={handleSubmitEdit} autoFocus>
                         Thêm
                     </Button>
                 </DialogActions>
             </Dialog>
+            <Snackbar open={notification.open} autoHideDuration={6000} onClose={handleCloseAlert}>
+                <Alert onClose={handleCloseAlert} severity={notification.status} sx={{ width: '100%' }}>
+                    {notification.message}
+                </Alert>
+            </Snackbar>
         </MainCard>
 }
 

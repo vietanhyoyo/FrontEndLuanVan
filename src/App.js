@@ -4,9 +4,9 @@ import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, StyledEngineProvider } from '@mui/material';
 
 // date-fns
-import AdapterDateFns from '@mui/lab/AdapterDateFns'
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 
-import { LocalizationProvider } from '@mui/lab';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 // routing
 import Routes from 'routes';

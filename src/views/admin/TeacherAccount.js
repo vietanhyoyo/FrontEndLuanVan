@@ -1,18 +1,20 @@
-
-
 // material-ui
-import { Typography, Grid ,IconButton } from '@mui/material';
+import { IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
-import * as React from 'react';
+import { useState, useEffect } from 'react';
 
 import {
     Table, TableBody, TableCell, TableContainer,
-    TableHead, TableRow, Paper
+    TableHead, TableRow, Paper, LinearProgress, Box
 } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+
+import TeacherService from 'services/objects/teacher.service';
 
 function createData(name, role, date) {
     return { name, role, date };
@@ -24,37 +26,98 @@ const rows = [
     createData('Admin 3', 'class', '30/6/2022'),
     createData('Cap quyen', 'class', '20/3/2022')
 ];
-// ==============================|| SAMPLE PAGE ||============================== //
 
-const TeacherAccount = () => (
-    <MainCard title="Tài khoản giáo viên">
+const teacherService = new TeacherService();
+
+const TeacherAccount = () => {
+
+    const [teacherList, setTeacherList] = useState([]);
+
+    const navigate = useNavigate();
+    const getAPI = async () => {
+        try {
+            const result = await teacherService.getAll();
+            setTeacherList(result.data);
+            console.log(result.data);
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    useEffect(() => {
+        getAPI();
+    }, [])
+
+    const handleDelete = async (index) => {
+        try {
+            const result = await teacherService.delete(
+                teacherList[index].account._id,
+                teacherList[index]._id
+            );
+            console.log(result);
+            getAPI();
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    return <MainCard title="Tài khoản giáo viên">
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
                     <TableRow>
                         <TableCell>#</TableCell>
-                        <TableCell align="left">Tên đăng nhập</TableCell>
-                        <TableCell align="left">Quyền</TableCell>
-                        <TableCell align="left">Ngày tạo</TableCell>
-                        <TableCell align="right"> </TableCell>
+                        <TableCell align="left">Họ và tên</TableCell>
+                        <TableCell align="left">Lớp chủ nhiệm</TableCell>
+                        <TableCell align="left">Số điện thoại</TableCell>
+                        <TableCell align="left">Email</TableCell>
+                        <TableCell align="left">Tài khoản</TableCell>
+                        <TableCell align="left">CMND/CCCD</TableCell>
+                        <TableCell align="left">Số bảo hiểm y tế</TableCell>
+                        <TableCell align="left">Dân tộc</TableCell>
+                        <TableCell align="left">Quê quán</TableCell>
+                        <TableCell align="left">Nơi ở</TableCell>
+                        <TableCell align="right">
+                            <IconButton component="span"
+                                onClick={() => {
+                                    navigate('/manager/update-teacher');
+                                }}>
+                                <AddCircleOutlineIcon />
+                            </IconButton></TableCell>
                     </TableRow>
                 </TableHead>
-                <TableBody>
-                    {rows.map((row, index) => (
+                <TableBody>{teacherList.length === 0
+                    ?
+                    <TableRow
+                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    >
+                        <TableCell width={"100%"}>
+                            <LinearProgress />
+                        </TableCell>
+                    </TableRow>
+                    :
+                    teacherList.map((row, index) => (
                         <TableRow
-                            key={row.name}
+                            key={index}
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                         >
-                            <TableCell width={"30px"}>{index}</TableCell>
-                            <TableCell align="left">{row.name}</TableCell>
-                            <TableCell align="left">{row.role}</TableCell>
-                            <TableCell align="left">{row.date}</TableCell>
-                            <TableCell align="right">
+                            <TableCell width={"30px"}>{index + 1}</TableCell>
+                            <TableCell align="left" sx={{ minWidth: '160px' }}>{row.account.name}</TableCell>
+                            <TableCell align="center" sx={{ minWidth: '128px' }}>{ row.homeroomTeacher ? row.homeroomClass.name : ' ' }</TableCell>
+                            <TableCell align="center" sx={{ minWidth: '80px' }}>{row.phone}</TableCell>
+                            <TableCell align="left" sx={{ minWidth: '120px' }}>{row.email}</TableCell>
+                            <TableCell align="center" sx={{ minWidth: '100px' }}>{row.account.username}</TableCell>
+                            <TableCell align="left" sx={{ minWidth: '100px' }}>{row.identityCard}</TableCell>
+                            <TableCell align="left" sx={{ minWidth: '140px' }}>{row.socialInsurance}</TableCell>
+                            <TableCell align="left" sx={{ minWidth: '80px' }}>{row.ethnic}</TableCell>
+                            <TableCell align="left" sx={{ minWidth: '300px' }}>{row.homeTown}</TableCell>
+                            <TableCell align="left" sx={{ minWidth: '300px' }}>{row.residence}</TableCell>
+                            <TableCell align="right" sx={{ width: '50px', display: 'flex', justifyContent: 'right' }}>
+                                <IconButton color="error" component="span" onClick={() => handleDelete(index)}>
+                                    <DeleteIcon />
+                                </IconButton>
                                 <IconButton color="primary" component="span">
                                     <EditIcon />
-                                </IconButton>
-                                <IconButton color="error" component="span">
-                                    <DeleteIcon />
                                 </IconButton>
                             </TableCell>
                         </TableRow>
@@ -63,6 +126,7 @@ const TeacherAccount = () => (
             </Table>
         </TableContainer>
     </MainCard>
-);
+
+}
 
 export default TeacherAccount;

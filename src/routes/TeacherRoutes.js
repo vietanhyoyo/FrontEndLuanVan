@@ -23,7 +23,7 @@ const TeacherRoutes = {
         {
             path: '/teacher/classCalendar',
             element: <ClassCalendar />
-        },
+        }
     ]
 };
 

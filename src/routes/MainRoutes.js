@@ -22,6 +22,7 @@ const StudentAccount = Loadable(lazy(() => import('views/admin/StudentAccount'))
 const AdminProfile = Loadable(lazy(() => import('views/admin/AdminProflie')))
 const ClassManager = Loadable(lazy(() => import('views/admin/ClassManager')))
 const SchoolYear = Loadable(lazy(() => import('views/admin/SchoolYear')))
+const UpdateTeacher = Loadable(lazy(() => import('views/admin/UpdateTeacher')))
 // ==============================|| MAIN ROUTING ||============================== //
 
 const MainRoutes = {
@@ -79,9 +80,14 @@ const MainRoutes = {
         {
             path: '/manager/class',
             element: <ClassManager />
-        },{
+        },
+        {
             path: '/manager/school-year',
             element: <SchoolYear />
+        },
+        {
+            path: '/manager/update-teacher',
+            element: <UpdateTeacher />
         }
     ]
 };

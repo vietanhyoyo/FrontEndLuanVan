@@ -36,6 +36,11 @@ class ClassService extends BaseService {
         const result = await this.api.post('/class/change-class', obj);
         return result;
     }
+
+    getNowClasses = async () => {
+        const result = await this.api.get('/class/now-class-list');
+        return result;
+    }
 }
 
 export default ClassService;
