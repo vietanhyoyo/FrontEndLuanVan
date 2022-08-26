@@ -19,6 +19,16 @@ class TeacherService extends BaseService {
         });
         return result;
     }
+
+    getOneTeacher = async (id) => {
+        const result = await this.api.post('/teacher/get-teacher-by-id', { id });
+        return result;
+    }
+
+    update = async (account, teacher) => {
+        const result = await this.api.post('/teacher/update-teacher', { account, teacher });
+        return result;
+    }
 }
 
 export default TeacherService;

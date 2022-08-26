@@ -2,7 +2,7 @@
 
 // material-ui
 import {
-    Grid, IconButton, Select,
+    Grid, IconButton, Select, Button,
     MenuItem, FormControl, InputLabel
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
@@ -10,92 +10,84 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
-import * as React from 'react';
+import { useEffect, useState } from 'react';
+import ClassService from 'services/objects/class.service';
+import StudentService from 'services/objects/student.service';
+import { useNavigate } from 'react-router-dom';
 
-import {
-    Table, TableBody, TableCell, TableContainer,
-    TableHead, TableRow, Paper
-} from '@mui/material';
+const classService = new ClassService();
+const studentService = new StudentService();
 
-function createData(name, role, date) {
-    return { name, role, date };
-}
+const StudentAccount = () => {
+    const navigate = useNavigate();
 
-const rows = [
-    createData('Tai khoan 1', 'all', '20/12/2020'),
-    createData('Admin 2', 'all', '28/5/2020'),
-    createData('Admin 3', 'class', '30/6/2022'),
-    createData('Cap quyen', 'class', '20/3/2022')
-];
-// ==============================|| SAMPLE PAGE ||============================== //
+    const [classList, setClassList] = useState([])
+    const [selectClass, setSelectClass] = useState(-1);
 
-const TeacherAccount = () => {
+    const getNowClassList = async () => {
+        try {
+            const result = await classService.getNowClasses();
+            setClassList(result.data);
+            console.log(result.data);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const getStudentList = async (id) => {
+        try {
+            const result = await studentService.getAll(id);
+            console.log(result);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        if (classList.length === 0)
+            getNowClassList();
+        if (selectClass === -1)
+            getStudentList(null);
+        else getStudentList(classList[selectClass]._id);
+    }, [selectClass])
 
     return <>
         <Grid container spacing={3} justifyContent="center">
             <Grid item xs={12}>
                 <MainCard>
-                    <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-                        <InputLabel id="demo-simple-select-standard-label">Lớp</InputLabel>
+                    <FormControl variant="standard" sx={{ minWidth: 120, marginRight: '14px' }}>
+                        <InputLabel id="year-filter-select-label">Lớp</InputLabel>
                         <Select
-                            labelId="demo-simple-select-standard-label"
-                            id="demo-simple-select-standard"
-                            label="Lớp"
-                            defaultValue={10}
+                            labelId="homeroomClass-select-label"
+                            id="homeroomClass-select"
+                            value={selectClass}
+                            label="Class"
+                            onChange={(event) => {
+                                setSelectClass(event.target.value);
+                            }}
                         >
-                            <MenuItem value="">
-                                <em>None</em>
-                            </MenuItem>
-                            <MenuItem value={10}>1A</MenuItem>
-                            <MenuItem value={20}>2A</MenuItem>
-                            <MenuItem value={30}>3A</MenuItem>
-                            <MenuItem value={40}>3B</MenuItem>
-                            <MenuItem value={50}>4A</MenuItem>
-                            <MenuItem value={60}>5A</MenuItem>
+                            <MenuItem value={-1}>Chưa có lớp</MenuItem>
+                            {
+
+                                classList.length > 0 &&
+                                classList.map((row, index) => {
+                                    return <MenuItem key={index} value={index}>{row.name}</MenuItem>
+                                })
+                            }
                         </Select>
                     </FormControl>
+                    <Button variant='contained' onClick={() => {
+                        navigate('/manager/add-student');
+                    }}>Thêm học sinh</Button>
                 </MainCard>
             </Grid>
             <Grid item xs={12}>
                 <MainCard title="Tài khoản học sinh">
-                    <TableContainer component={Paper}>
-                        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>#</TableCell>
-                                    <TableCell align="left">Tên đăng nhập</TableCell>
-                                    <TableCell align="left">Quyền</TableCell>
-                                    <TableCell align="left">Ngày tạo</TableCell>
-                                    <TableCell align="right"> </TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {rows.map((row, index) => (
-                                    <TableRow
-                                        key={row.name}
-                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                    >
-                                        <TableCell width={"30px"}>{index}</TableCell>
-                                        <TableCell align="left">{row.name}</TableCell>
-                                        <TableCell align="left">{row.role}</TableCell>
-                                        <TableCell align="left">{row.date}</TableCell>
-                                        <TableCell align="right">
-                                            <IconButton color="primary" component="span">
-                                                <EditIcon />
-                                            </IconButton>
-                                            <IconButton color="error" component="span">
-                                                <DeleteIcon />
-                                            </IconButton>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+
                 </MainCard>
             </Grid>
         </Grid>
     </>
 };
 
-export default TeacherAccount;
+export default StudentAccount;

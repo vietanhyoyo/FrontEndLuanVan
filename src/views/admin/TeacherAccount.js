@@ -61,6 +61,10 @@ const TeacherAccount = () => {
         }
     }
 
+    const handleEdit = (idTeacher) => {
+        navigate(`/manager/update-teacher/${idTeacher}`);
+    }
+
     return <MainCard title="Tài khoản giáo viên">
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -80,7 +84,7 @@ const TeacherAccount = () => {
                         <TableCell align="right">
                             <IconButton component="span"
                                 onClick={() => {
-                                    navigate('/manager/update-teacher');
+                                    navigate('/manager/add-teacher');
                                 }}>
                                 <AddCircleOutlineIcon />
                             </IconButton></TableCell>
@@ -103,7 +107,7 @@ const TeacherAccount = () => {
                         >
                             <TableCell width={"30px"}>{index + 1}</TableCell>
                             <TableCell align="left" sx={{ minWidth: '160px' }}>{row.account.name}</TableCell>
-                            <TableCell align="center" sx={{ minWidth: '128px' }}>{ row.homeroomTeacher ? row.homeroomClass.name : ' ' }</TableCell>
+                            <TableCell align="center" sx={{ minWidth: '128px' }}>{row.homeroomTeacher ? row.homeroomClass.name : ' '}</TableCell>
                             <TableCell align="center" sx={{ minWidth: '80px' }}>{row.phone}</TableCell>
                             <TableCell align="left" sx={{ minWidth: '120px' }}>{row.email}</TableCell>
                             <TableCell align="center" sx={{ minWidth: '100px' }}>{row.account.username}</TableCell>
@@ -116,7 +120,7 @@ const TeacherAccount = () => {
                                 <IconButton color="error" component="span" onClick={() => handleDelete(index)}>
                                     <DeleteIcon />
                                 </IconButton>
-                                <IconButton color="primary" component="span">
+                                <IconButton color="primary" component="span" onClick={() => handleEdit(row._id)}>
                                     <EditIcon />
                                 </IconButton>
                             </TableCell>

@@ -2,8 +2,8 @@
 import moment from 'moment';
 // material-ui
 import {
-    Typography, Button, InputLabel, FormControl, LinearProgress,
-    CardContent, TextField, Box, FormControlLabel, Checkbox,
+    Typography, Button, InputAdornment, InputLabel, FormControl, Input,
+    CardContent, TextField, Box, IconButton, FormControlLabel, Checkbox,
     MenuItem, Select
 } from '@mui/material';
 
@@ -15,7 +15,6 @@ import MainCard from 'ui-component/cards/MainCard';
 import { useEffect, useState } from 'react';
 import TeacherService from 'services/objects/teacher.service';
 import ClassService from 'services/objects/class.service';
-import { useParams } from 'react-router-dom';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -38,10 +37,7 @@ function formatInputDate(dateString) {
 
 const inputStyle = { marginRight: '14px', marginBottom: '14px' };
 
-const UpdateTeacher = () => {
-
-    const { id } = useParams();
-
+const AddTeacher = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [warning, setWarning] = useState({
         name: null,
@@ -55,39 +51,21 @@ const UpdateTeacher = () => {
         avatar: null,
         socialInsurance: null
     })
-    const [teacher, setTeacher] = useState({
-        account: {
-            name: " ",
-            password: " ",
-            refreshToken: null,
-            role: 1,
-            updatedAt: " ",
-            username: " ",
-            _id: " "
-        },
+    const [newTeacher, setNewTeacher] = useState({
+        name: "",
+        username: "",
+        password: "",
+        ethnic: "",
+        birthday: null,
+        identityCard: "",
+        homeTown: "",
+        residence: "",
+        phone: "",
+        email: "",
         avatar: "",
-        birthday: " ",
-        createdAt: " ",
-        email: " ",
-        ethnic: " ",
-        homeTown: " ",
-        homeroomClass: null,
+        socialInsurance: "",
         homeroomTeacher: false,
-        identityCard: " ",
-        isDelete: false,
-        phone: " ",
-        residence: " ",
-        socialInsurance: " ",
-        _id: " "
-    })
-    const [account, setAccount] = useState({
-        name: " ",
-        password: " ",
-        refreshToken: null,
-        role: 1,
-        updatedAt: " ",
-        username: " ",
-        _id: " "
+        homeroomClass: null
     })
     const [classList, setClassList] = useState([]);
     const [selectClass, setSelectClass] = useState(0);
@@ -96,16 +74,6 @@ const UpdateTeacher = () => {
         try {
             const result = await classService.getNowClasses();
             setClassList(result.data);
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    const getAPI = async () => {
-        try {
-            const result = await teacherService.getOneTeacher(id);
-            setTeacher(result.data.data);
-            setAccount(result.data.data.account);
             console.log(result.data);
         } catch (error) {
             console.log(error);
@@ -113,7 +81,6 @@ const UpdateTeacher = () => {
     }
 
     useEffect(() => {
-        getAPI();
         getNowClassList();
     }, [])
 
@@ -127,32 +94,37 @@ const UpdateTeacher = () => {
         event.preventDefault();
     };
 
-    const handleSave = async () => {
-        const postData = teacher;
-        const postAccount = account;
-
-        postData.homeroomClass = teacher.homeroomTeacher ? classList[selectClass]._id : null;
-        postData.account = account._id;
-
+    const addTeacher = async () => {
+        if (
+            newTeacher.name === "" ||
+            newTeacher.username === "" ||
+            newTeacher.password === "" ||
+            newTeacher.ethnic === "" ||
+            newTeacher.birthday === null ||
+            newTeacher.identityCard === "" ||
+            newTeacher.residence === "" ||
+            newTeacher.phone === "" ||
+            newTeacher.email === "" ||
+            newTeacher.socialInsurance === ""
+        ) {
+            alert('Bạn chưa nhập đủ thông tin');
+            return;
+        }
         try {
-            const result = await teacherService.update(postAccount, postData);
+            const data = {
+                ...newTeacher,
+                homeroomClass: newTeacher.homeroomTeacher ? classList[selectClass]._id : null
+            }
+            const result = await teacherService.add(data);
             console.log(result);
+            navigate('/manager/teacher');
         } catch (error) {
-            console.log(error);
+            console.log(error)
         }
     }
 
-    const handleCancel = () => {
-        navigate('/manager/teacher');
-    }
-
-    return teacher._id === " "
-        ?
-        <Box sx={{ width: '100%' }}>
-            <LinearProgress />
-        </Box>
-        :
-        <MainCard title="Cập nhật tài khoản giáo viên">
+    return (
+        <MainCard title="Thêm tài khoản giáo viên">
             <CardContent>
                 <Typography gutterBottom variant="h4" component="div">
                     Thông tin tài khoản
@@ -162,12 +134,12 @@ const UpdateTeacher = () => {
                         label="Họ và tên"
                         required
                         variant="standard"
-                        value={account.name}
-                        onChange={(event) => setAccount(prev => ({
+                        sx={inputStyle}
+                        value={newTeacher.name}
+                        onChange={(event) => setNewTeacher(prev => ({
                             ...prev,
                             name: event.target.value
                         }))}
-                        sx={inputStyle}
                         error={warning.name ? true : false}
                         helpertext={warning.name}
                         onBlur={(event) => {
@@ -179,7 +151,7 @@ const UpdateTeacher = () => {
                         inputProps={offAutoComplete} />
                     <TextField label="Tài khoản đăng nhập"
                         required
-                        value={account.username}
+                        value={newTeacher.username}
                         error={warning.username ? true : false}
                         helpertext={warning.username}
                         onBlur={(event) => {
@@ -188,13 +160,49 @@ const UpdateTeacher = () => {
                             }
                         }}
                         onFocus={() => setWarning(prev => ({ ...prev, username: null }))}
-                        onChange={(event) => setAccount(prev => ({
+                        onChange={(event) => setNewTeacher(prev => ({
                             ...prev,
                             username: event.target.value
                         }))}
                         variant="standard"
                         sx={inputStyle}
                         inputProps={offAutoComplete} />
+                    <FormControl sx={inputStyle} variant="standard">
+                        <InputLabel htmlFor="adornment-password">Mật khẩu*</InputLabel>
+                        <Input
+                            required
+                            inputProps={offAutoComplete}
+                            value={newTeacher.password}
+                            onChange={(event) => setNewTeacher(prev => ({
+                                ...prev,
+                                password: event.target.value
+                            }))}
+                            id="adornment-password"
+                            type={showPassword ? 'text' : 'password'}
+                            endAdornment={
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        autoComplete="new-password"
+                                        aria-label="toggle password visibility"
+                                        onClick={handleClickShowPassword}
+                                        onMouseDown={handleMouseDownPassword}
+                                        edge="end"
+                                    >
+                                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                            }
+                            label="Password"
+                            error={warning.password ? true : false}
+                            helpertext={warning.password}
+                            onBlur={(event) => {
+                                if (event.target.value === '') {
+                                    setWarning(prev => ({ ...prev, password: 'Chưa nhập mật khẩu.' }))
+                                }
+                            }}
+                            onFocus={() => setWarning(prev => ({ ...prev, password: null }))}
+                        />
+                    </FormControl>
                 </Box>
             </CardContent>
             <CardContent>
@@ -214,8 +222,8 @@ const UpdateTeacher = () => {
                         }}
                         onFocus={() => setWarning(prev => ({ ...prev, ethnic: null }))}
                         sx={inputStyle}
-                        value={teacher.ethnic}
-                        onChange={(event) => setTeacher(prev => ({
+                        value={newTeacher.ethnic}
+                        onChange={(event) => setNewTeacher(prev => ({
                             ...prev,
                             ethnic: event.target.value
                         }))}
@@ -223,8 +231,8 @@ const UpdateTeacher = () => {
                     <TextField label="Số CMND/CCCD"
                         required
                         variant="standard"
-                        value={teacher.identityCard}
-                        onChange={(event) => setTeacher(prev => ({
+                        value={newTeacher.identityCard}
+                        onChange={(event) => setNewTeacher(prev => ({
                             ...prev,
                             identityCard: event.target.value
                         }))}
@@ -241,8 +249,8 @@ const UpdateTeacher = () => {
                     <TextField label="Số điện thoại"
                         required
                         variant="standard"
-                        value={teacher.phone}
-                        onChange={(event) => setTeacher(prev => ({
+                        value={newTeacher.phone}
+                        onChange={(event) => setNewTeacher(prev => ({
                             ...prev,
                             phone: event.target.value
                         }))}
@@ -259,7 +267,7 @@ const UpdateTeacher = () => {
                     <TextField label="Email"
                         required
                         type="email"
-                        value={teacher.email}
+                        value={newTeacher.email}
                         error={warning.email ? true : false}
                         helpertext={warning.email}
                         onBlur={(event) => {
@@ -268,7 +276,7 @@ const UpdateTeacher = () => {
                             }
                         }}
                         onFocus={() => setWarning(prev => ({ ...prev, email: null }))}
-                        onChange={(event) => setTeacher(prev => ({
+                        onChange={(event) => setNewTeacher(prev => ({
                             ...prev,
                             email: event.target.value
                         }))}
@@ -280,8 +288,8 @@ const UpdateTeacher = () => {
                     <TextField label="Số bảo hiểm y tế"
                         required
                         variant="standard"
-                        value={teacher.socialInsurance}
-                        onChange={(event) => setTeacher(prev => ({
+                        value={newTeacher.socialInsurance}
+                        onChange={(event) => setNewTeacher(prev => ({
                             ...prev,
                             socialInsurance: event.target.value
                         }))}
@@ -303,16 +311,16 @@ const UpdateTeacher = () => {
                         type="date"
                         sx={inputStyle}
                         InputLabelProps={{ shrink: true, }}
-                        value={teacher.birthday ? formatInputDate(teacher.birthday) : formatInputDate('')}
-                        onChange={(event) => setTeacher(prev => ({
+                        value={newTeacher.birthday ? formatInputDate(newTeacher.birthday) : formatInputDate('')}
+                        onChange={(event) => setNewTeacher(prev => ({
                             ...prev,
                             birthday: event.target.value
                         }))}
                     />
                     <TextField label="Quê quán"
                         variant="standard"
-                        value={teacher.homeTown}
-                        onChange={(event) => setTeacher(prev => ({
+                        value={newTeacher.homeTown}
+                        onChange={(event) => setNewTeacher(prev => ({
                             ...prev,
                             homeTown: event.target.value
                         }))}
@@ -320,8 +328,8 @@ const UpdateTeacher = () => {
                         inputProps={offAutoComplete} />
                     <TextField label="Nơi ở thường trú"
                         required
-                        value={teacher.residence}
-                        onChange={(event) => setTeacher(prev => ({
+                        value={newTeacher.residence}
+                        onChange={(event) => setNewTeacher(prev => ({
                             ...prev,
                             residence: event.target.value
                         }))}
@@ -342,8 +350,8 @@ const UpdateTeacher = () => {
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    checked={teacher.homeroomTeacher}
-                                    onChange={(event) => setTeacher(prev => ({
+                                    checked={newTeacher.homeroomTeacher}
+                                    onChange={(event) => setNewTeacher(prev => ({
                                         ...prev,
                                         homeroomTeacher: event.target.checked
                                     }))}
@@ -361,7 +369,7 @@ const UpdateTeacher = () => {
                             onChange={(event) => {
                                 setSelectClass(event.target.value);
                             }}
-                            disabled={!teacher.homeroomTeacher}
+                            disabled={!newTeacher.homeroomTeacher}
                         >
                             {
                                 classList.length > 0 &&
@@ -373,16 +381,13 @@ const UpdateTeacher = () => {
                     </FormControl>
                 </Box>
             </CardContent>
-            <CardContent sx={{display: 'flex'}}>
-                <Box mr={2}>
-                    <Button variant="outlined" onClick={handleCancel}>Hủy</Button>
-                </Box>
+            <CardContent>
                 <Box>
-                    <Button variant="contained" onClick={handleSave}>Lưu thay đổi</Button>
+                    <Button variant="contained" onClick={addTeacher}>Thêm giáo viên</Button>
                 </Box>
             </CardContent>
         </MainCard>
-
+    );
 }
 
-export default UpdateTeacher;
+export default AddTeacher;
