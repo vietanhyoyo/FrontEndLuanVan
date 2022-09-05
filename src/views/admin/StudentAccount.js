@@ -18,8 +18,22 @@ import ClassService from 'services/objects/class.service';
 import StudentService from 'services/objects/student.service';
 import { useNavigate } from 'react-router-dom';
 
+import { styled } from '@mui/material/styles';
+
+import { tableCellClasses } from '@mui/material/TableCell';
+
 const classService = new ClassService();
 const studentService = new StudentService();
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    '&:nth-of-type(odd)': {
+        backgroundColor: theme.palette.action.hover,
+    },
+    // hide last border
+    '&:last-child td, &:last-child th': {
+        border: 0,
+    },
+}));
 
 const StudentAccount = () => {
     const navigate = useNavigate();
@@ -108,7 +122,7 @@ const StudentAccount = () => {
             <Grid item xs={12}>
                 <MainCard title="Tài khoản học sinh">
                     <TableContainer component={Paper}>
-                        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                        <Table sx={{ minWidth: 650 }} aria-label="simple table" size="small">
                             <TableHead>
                                 <TableRow>
                                     <TableCell>#</TableCell>
@@ -139,7 +153,7 @@ const StudentAccount = () => {
                                 </TableRow>
                                 :
                                 studentList.map((row, index) => (
-                                    <TableRow
+                                    <StyledTableRow
                                         key={index}
                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                     >
@@ -161,7 +175,7 @@ const StudentAccount = () => {
                                                 <EditIcon />
                                             </IconButton>
                                         </TableCell>
-                                    </TableRow>
+                                    </StyledTableRow>
                                 ))}
                             </TableBody>
                         </Table>

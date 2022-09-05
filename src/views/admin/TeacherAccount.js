@@ -13,8 +13,19 @@ import {
     TableHead, TableRow, Paper, LinearProgress, Box
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-
 import TeacherService from 'services/objects/teacher.service';
+
+import { styled } from '@mui/material/styles';
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    '&:nth-of-type(odd)': {
+        backgroundColor: theme.palette.action.hover,
+    },
+    // hide last border
+    '&:last-child td, &:last-child th': {
+        border: 0,
+    },
+}));
 
 function createData(name, role, date) {
     return { name, role, date };
@@ -66,8 +77,8 @@ const TeacherAccount = () => {
     }
 
     return <MainCard title="Tài khoản giáo viên">
-        <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <TableContainer component={Paper} >
+            <Table sx={{ minWidth: 650 }} aria-label="simple table" size="small">
                 <TableHead>
                     <TableRow>
                         <TableCell>#</TableCell>
@@ -102,7 +113,7 @@ const TeacherAccount = () => {
                     </TableRow>
                     :
                     teacherList.map((row, index) => (
-                        <TableRow
+                        <StyledTableRow
                             key={index}
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                         >
@@ -126,7 +137,7 @@ const TeacherAccount = () => {
                                     <EditIcon />
                                 </IconButton>
                             </TableCell>
-                        </TableRow>
+                        </StyledTableRow>
                     ))}
                 </TableBody>
             </Table>

@@ -22,6 +22,17 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 import AdminService from 'services/objects/admin.service';
 import MuiAlert from '@mui/material/Alert';
+import { styled } from '@mui/material/styles';
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    '&:nth-of-type(odd)': {
+        backgroundColor: theme.palette.action.hover,
+    },
+    // hide last border
+    '&:last-child td, &:last-child th': {
+        border: 0,
+    },
+}));
 
 const Alert = forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -204,7 +215,7 @@ const AdminAccount = () => {
         :
         <MainCard title="Tài khoản quản trị">
             <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <Table sx={{ minWidth: 650 }} aria-label="simple table" size="small">
                     <TableHead>
                         <TableRow>
                             <TableCell>#</TableCell>
@@ -223,7 +234,7 @@ const AdminAccount = () => {
                     </TableHead>
                     <TableBody>
                         {accountList.map((row, index) => (
-                            <TableRow
+                            <StyledTableRow
                                 key={index}
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                             >
@@ -240,7 +251,7 @@ const AdminAccount = () => {
                                         <DeleteIcon />
                                     </IconButton>
                                 </TableCell>
-                            </TableRow>
+                            </StyledTableRow>
                         ))}
                     </TableBody>
                 </Table>
