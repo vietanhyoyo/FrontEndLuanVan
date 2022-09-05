@@ -11,6 +11,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 // project imports
+import ChooseSubject from './teacher/ChooseSubject';
 import MainCard from 'ui-component/cards/MainCard';
 import { useEffect, useState } from 'react';
 import TeacherService from 'services/objects/teacher.service';
@@ -75,6 +76,7 @@ const UpdateTeacher = () => {
         homeroomTeacher: false,
         identityCard: " ",
         isDelete: false,
+        subjects: [],
         phone: " ",
         residence: " ",
         socialInsurance: " ",
@@ -112,20 +114,22 @@ const UpdateTeacher = () => {
         }
     }
 
-    useEffect(() => {
-        getAPI();
-        getNowClassList();
+    useEffect(async () => {
+        await getNowClassList();
+        await getAPI();
     }, [])
 
+    useEffect(() => {
+        let chooseClass = 0;
+        if (teacher.homeroomTeacher) {
+            console.log(classList);
+            chooseClass = classList.findIndex(element => element._id === teacher.homeroomClass);
+            console.log(chooseClass);
+        }
+        if (chooseClass !== -1 && chooseClass !== 0) setSelectClass(chooseClass);
+    }, [teacher])
+
     const navigate = useNavigate();
-
-    const handleClickShowPassword = () => {
-        setShowPassword(!showPassword);
-    };
-
-    const handleMouseDownPassword = (event) => {
-        event.preventDefault();
-    };
 
     const handleSave = async () => {
         const postData = teacher;
@@ -136,7 +140,7 @@ const UpdateTeacher = () => {
 
         try {
             const result = await teacherService.update(postAccount, postData);
-            console.log(result);
+            navigate('/manager/teacher');
         } catch (error) {
             console.log(error);
         }
@@ -144,6 +148,13 @@ const UpdateTeacher = () => {
 
     const handleCancel = () => {
         navigate('/manager/teacher');
+    }
+
+    const handleChangeSubject = (array) => {
+        setTeacher(prev => ({
+            ...prev,
+            subjects: array
+        }))
     }
 
     return teacher._id === " "
@@ -220,24 +231,6 @@ const UpdateTeacher = () => {
                             ethnic: event.target.value
                         }))}
                         inputProps={offAutoComplete} />
-                    <TextField label="Số CMND/CCCD"
-                        required
-                        variant="standard"
-                        value={teacher.identityCard}
-                        onChange={(event) => setTeacher(prev => ({
-                            ...prev,
-                            identityCard: event.target.value
-                        }))}
-                        error={warning.identityCard ? true : false}
-                        helpertext={warning.identityCard}
-                        onBlur={(event) => {
-                            if (event.target.value === '') {
-                                setWarning(prev => ({ ...prev, identityCard: 'Chưa điền thông tin' }))
-                            }
-                        }}
-                        onFocus={() => setWarning(prev => ({ ...prev, identityCard: null }))}
-                        sx={inputStyle}
-                        inputProps={offAutoComplete} />
                     <TextField label="Số điện thoại"
                         required
                         variant="standard"
@@ -277,6 +270,24 @@ const UpdateTeacher = () => {
                         inputProps={offAutoComplete} />
                 </Box>
                 <Box mt={2}>
+                    <TextField label="Số CMND/CCCD"
+                        required
+                        variant="standard"
+                        value={teacher.identityCard}
+                        onChange={(event) => setTeacher(prev => ({
+                            ...prev,
+                            identityCard: event.target.value
+                        }))}
+                        error={warning.identityCard ? true : false}
+                        helpertext={warning.identityCard}
+                        onBlur={(event) => {
+                            if (event.target.value === '') {
+                                setWarning(prev => ({ ...prev, identityCard: 'Chưa điền thông tin' }))
+                            }
+                        }}
+                        onFocus={() => setWarning(prev => ({ ...prev, identityCard: null }))}
+                        sx={inputStyle}
+                        inputProps={offAutoComplete} />
                     <TextField label="Số bảo hiểm y tế"
                         required
                         variant="standard"
@@ -309,6 +320,13 @@ const UpdateTeacher = () => {
                             birthday: event.target.value
                         }))}
                     />
+                </Box>
+            </CardContent>
+            <CardContent>
+                <Typography gutterBottom variant="h4" component="div">
+                    Địa chỉ
+                </Typography>
+                <Box mt={2}>
                     <TextField label="Quê quán"
                         variant="standard"
                         value={teacher.homeTown}
@@ -335,6 +353,22 @@ const UpdateTeacher = () => {
                         }}
                         onFocus={() => setWarning(prev => ({ ...prev, residence: null }))}
                         sx={[inputStyle, { width: '280px' }]}
+                        inputProps={offAutoComplete} />
+                </Box>
+            </CardContent>
+            <CardContent>
+                <Typography gutterBottom variant="h4" component="div">
+                    Chức vụ
+                </Typography>
+                <Box mt={2}>
+                    <TextField label="Chức vụ trong trường"
+                        value={teacher.position}
+                        onChange={(event) => setTeacher(prev => ({
+                            ...prev,
+                            position: event.target.value
+                        }))}
+                        variant="standard"
+                        sx={inputStyle}
                         inputProps={offAutoComplete} />
                 </Box>
                 <Box mt={2}>
@@ -373,7 +407,15 @@ const UpdateTeacher = () => {
                     </FormControl>
                 </Box>
             </CardContent>
-            <CardContent sx={{display: 'flex'}}>
+            <CardContent>
+                <Typography gutterBottom variant="h4" component="div">
+                    Môn học giảng dạy
+                </Typography>
+                <Box mt={2}>
+                    <ChooseSubject changeSubject={handleChangeSubject} subjectProps={teacher.subjects} />
+                </Box>
+            </CardContent>
+            <CardContent sx={{ display: 'flex' }}>
                 <Box mr={2}>
                     <Button variant="outlined" onClick={handleCancel}>Hủy</Button>
                 </Box>

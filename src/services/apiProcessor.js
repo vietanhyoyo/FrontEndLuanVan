@@ -9,8 +9,6 @@ const HEADERS = {
 
 class APIProcessor {
 
-
-
     post = async (path, data) => {
 
         const token = sessionStorage.getItem(StorageKeys.ACCESS_TOKEN);

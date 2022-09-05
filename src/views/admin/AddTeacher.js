@@ -15,6 +15,8 @@ import MainCard from 'ui-component/cards/MainCard';
 import { useEffect, useState } from 'react';
 import TeacherService from 'services/objects/teacher.service';
 import ClassService from 'services/objects/class.service';
+import SubjectService from 'services/objects/subject.service';
+import ChooseSubject from './teacher/ChooseSubject';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -27,6 +29,7 @@ const offAutoComplete = {
 
 const teacherService = new TeacherService();
 const classService = new ClassService();
+const subjectService = new SubjectService();
 
 function formatInputDate(dateString) {
     let date = new Date(Date.now());
@@ -63,6 +66,8 @@ const AddTeacher = () => {
         phone: "",
         email: "",
         avatar: "",
+        subjects: [],
+        position: "",
         socialInsurance: "",
         homeroomTeacher: false,
         homeroomClass: null
@@ -74,7 +79,6 @@ const AddTeacher = () => {
         try {
             const result = await classService.getNowClasses();
             setClassList(result.data);
-            console.log(result.data);
         } catch (error) {
             console.log(error);
         }
@@ -116,8 +120,39 @@ const AddTeacher = () => {
                 homeroomClass: newTeacher.homeroomTeacher ? classList[selectClass]._id : null
             }
             const result = await teacherService.add(data);
-            console.log(result);
             navigate('/manager/teacher');
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const handleChangeSubject = (array) => {
+        setNewTeacher(prev => ({
+            ...prev,
+            subjects: array
+        }))
+    }
+
+    const handleChangeHomeroomTeacher = (event) => {
+        setNewTeacher(prev => ({
+            ...prev,
+            homeroomTeacher: event.target.checked
+        }))
+    }
+
+    const handleSelectClass = async (event) => {
+        setSelectClass(event.target.value);
+        try {
+            const result = await subjectService.getGrade(classList[event.target.value].grade);
+            console.log(result);
+            if (result.data.status === "Success") {
+                setNewTeacher(prev => ({
+                    ...prev,
+                    subjects: result.data.data
+                }))
+            }else {
+                console.log(result.data.message);
+            }
         } catch (error) {
             console.log(error)
         }
@@ -141,7 +176,7 @@ const AddTeacher = () => {
                             name: event.target.value
                         }))}
                         error={warning.name ? true : false}
-                        helpertext={warning.name}
+                        helperText={warning.name}
                         onBlur={(event) => {
                             if (event.target.value === '') {
                                 setWarning(prev => ({ ...prev, name: 'Chưa nhập tên.' }))
@@ -153,7 +188,7 @@ const AddTeacher = () => {
                         required
                         value={newTeacher.username}
                         error={warning.username ? true : false}
-                        helpertext={warning.username}
+                        helperText={warning.username}
                         onBlur={(event) => {
                             if (event.target.value === '') {
                                 setWarning(prev => ({ ...prev, username: 'Chưa nhập tài khoản.' }))
@@ -214,7 +249,7 @@ const AddTeacher = () => {
                         required
                         variant="standard"
                         error={warning.ethnic ? true : false}
-                        helpertext={warning.ethnic}
+                        helperText={warning.ethnic}
                         onBlur={(event) => {
                             if (event.target.value === '') {
                                 setWarning(prev => ({ ...prev, ethnic: 'Cần bổ xung' }))
@@ -228,24 +263,6 @@ const AddTeacher = () => {
                             ethnic: event.target.value
                         }))}
                         inputProps={offAutoComplete} />
-                    <TextField label="Số CMND/CCCD"
-                        required
-                        variant="standard"
-                        value={newTeacher.identityCard}
-                        onChange={(event) => setNewTeacher(prev => ({
-                            ...prev,
-                            identityCard: event.target.value
-                        }))}
-                        error={warning.identityCard ? true : false}
-                        helpertext={warning.identityCard}
-                        onBlur={(event) => {
-                            if (event.target.value === '') {
-                                setWarning(prev => ({ ...prev, identityCard: 'Chưa điền thông tin' }))
-                            }
-                        }}
-                        onFocus={() => setWarning(prev => ({ ...prev, identityCard: null }))}
-                        sx={inputStyle}
-                        inputProps={offAutoComplete} />
                     <TextField label="Số điện thoại"
                         required
                         variant="standard"
@@ -255,7 +272,7 @@ const AddTeacher = () => {
                             phone: event.target.value
                         }))}
                         error={warning.phone ? true : false}
-                        helpertext={warning.phone}
+                        helperText={warning.phone}
                         onBlur={(event) => {
                             if (event.target.value === '') {
                                 setWarning(prev => ({ ...prev, phone: 'Bạn cần nhập số điện thoại' }))
@@ -269,7 +286,7 @@ const AddTeacher = () => {
                         type="email"
                         value={newTeacher.email}
                         error={warning.email ? true : false}
-                        helpertext={warning.email}
+                        helperText={warning.email}
                         onBlur={(event) => {
                             if (event.target.value === '') {
                                 setWarning(prev => ({ ...prev, email: 'Nhập vào email' }))
@@ -285,6 +302,24 @@ const AddTeacher = () => {
                         inputProps={offAutoComplete} />
                 </Box>
                 <Box mt={2}>
+                    <TextField label="Số CMND/CCCD"
+                        required
+                        variant="standard"
+                        value={newTeacher.identityCard}
+                        onChange={(event) => setNewTeacher(prev => ({
+                            ...prev,
+                            identityCard: event.target.value
+                        }))}
+                        error={warning.identityCard ? true : false}
+                        helperText={warning.identityCard}
+                        onBlur={(event) => {
+                            if (event.target.value === '') {
+                                setWarning(prev => ({ ...prev, identityCard: 'Chưa điền thông tin' }))
+                            }
+                        }}
+                        onFocus={() => setWarning(prev => ({ ...prev, identityCard: null }))}
+                        sx={inputStyle}
+                        inputProps={offAutoComplete} />
                     <TextField label="Số bảo hiểm y tế"
                         required
                         variant="standard"
@@ -294,7 +329,7 @@ const AddTeacher = () => {
                             socialInsurance: event.target.value
                         }))}
                         error={warning.socialInsurance ? true : false}
-                        helpertext={warning.socialInsurance}
+                        helperText={warning.socialInsurance}
                         onBlur={(event) => {
                             if (event.target.value === '') {
                                 setWarning(prev => ({ ...prev, socialInsurance: 'Cần bổ xung' }))
@@ -317,6 +352,13 @@ const AddTeacher = () => {
                             birthday: event.target.value
                         }))}
                     />
+                </Box>
+            </CardContent>
+            <CardContent>
+                <Typography gutterBottom variant="h4" component="div">
+                    Địa chỉ
+                </Typography>
+                <Box mt={2}>
                     <TextField label="Quê quán"
                         variant="standard"
                         value={newTeacher.homeTown}
@@ -335,7 +377,7 @@ const AddTeacher = () => {
                         }))}
                         variant="standard"
                         error={warning.residence ? true : false}
-                        helpertext={warning.residence}
+                        helperText={warning.residence}
                         onBlur={(event) => {
                             if (event.target.value === '') {
                                 setWarning(prev => ({ ...prev, residence: 'Bổ xung nơi ở' }))
@@ -345,16 +387,29 @@ const AddTeacher = () => {
                         sx={[inputStyle, { width: '280px' }]}
                         inputProps={offAutoComplete} />
                 </Box>
+            </CardContent>
+            <CardContent>
+                <Typography gutterBottom variant="h4" component="div">
+                    Giảng dạy
+                </Typography>
+                <Box mt={2}>
+                    <TextField label="Chức vụ"
+                        value={newTeacher.position}
+                        onChange={(event) => setNewTeacher(prev => ({
+                            ...prev,
+                            position: event.target.value
+                        }))}
+                        variant="standard"
+                        sx={inputStyle}
+                        inputProps={offAutoComplete} />
+                </Box>
                 <Box mt={2}>
                     <FormControl>
                         <FormControlLabel
                             control={
                                 <Checkbox
                                     checked={newTeacher.homeroomTeacher}
-                                    onChange={(event) => setNewTeacher(prev => ({
-                                        ...prev,
-                                        homeroomTeacher: event.target.checked
-                                    }))}
+                                    onChange={handleChangeHomeroomTeacher}
                                 />
                             }
                             label="Giáo viên chủ nhiệm" />
@@ -366,9 +421,7 @@ const AddTeacher = () => {
                             id="homeroomClass-select"
                             value={selectClass}
                             label="Class"
-                            onChange={(event) => {
-                                setSelectClass(event.target.value);
-                            }}
+                            onChange={handleSelectClass}
                             disabled={!newTeacher.homeroomTeacher}
                         >
                             {
@@ -379,6 +432,14 @@ const AddTeacher = () => {
                             }
                         </Select>
                     </FormControl>
+                </Box>
+            </CardContent>
+            <CardContent>
+                <Typography gutterBottom variant="h4" component="div">
+                    Môn học giảng dạy
+                </Typography>
+                <Box mt={2}>
+                    <ChooseSubject changeSubject={handleChangeSubject} subjectProps={newTeacher.subjects} />
                 </Box>
             </CardContent>
             <CardContent>

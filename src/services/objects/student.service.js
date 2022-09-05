@@ -12,6 +12,21 @@ class StudentService extends BaseService {
         return result;
     }
 
+    deleteOne = async (idAccount, idStudent) => {
+        const result = await this.api.post('/student/delete-student', { idAccount, idStudent });
+        return result;
+    }
+
+    getOneStudentByID = async (id) => {
+        const result = await this.api.post('/student/get-student-by-id', { id });
+        return result;
+    }
+
+    update = async (account, student) => {
+        const result = await this.api.post('/student/update-student', { account, student });
+        return result;
+    }
+
 }
 
 export default StudentService;

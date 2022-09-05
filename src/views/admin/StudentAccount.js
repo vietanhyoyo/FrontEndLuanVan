@@ -3,10 +3,13 @@
 // material-ui
 import {
     Grid, IconButton, Select, Button,
-    MenuItem, FormControl, InputLabel
+    MenuItem, FormControl, InputLabel, Paper, TableContainer,
+    Table, TableHead, TableRow, TableCell, TableBody, LinearProgress
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
@@ -21,8 +24,10 @@ const studentService = new StudentService();
 const StudentAccount = () => {
     const navigate = useNavigate();
 
-    const [classList, setClassList] = useState([])
+    const [classList, setClassList] = useState([]);
     const [selectClass, setSelectClass] = useState(-1);
+    const [studentList, setStudentList] = useState([]);
+    console.log(studentList);
 
     const getNowClassList = async () => {
         try {
@@ -37,7 +42,7 @@ const StudentAccount = () => {
     const getStudentList = async (id) => {
         try {
             const result = await studentService.getAll(id);
-            console.log(result);
+            setStudentList(result.data);
         } catch (error) {
             console.log(error);
         }
@@ -50,6 +55,25 @@ const StudentAccount = () => {
             getStudentList(null);
         else getStudentList(classList[selectClass]._id);
     }, [selectClass])
+
+    const handleDelete = async (index) => {
+        try {
+            const bool = window.confirm('Bạn có muốn xóa học sinh này không?');
+            if (!bool) return;
+            const result = await studentService.deleteOne(
+                studentList[index].account._id,
+                studentList[index]._id
+            );
+            console.log(result);
+            getStudentList(classList[selectClass]._id);
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const handleEdit = (idStudent) => {
+        navigate(`/manager/update-student/${idStudent}`);
+    }
 
     return <>
         <Grid container spacing={3} justifyContent="center">
@@ -83,7 +107,65 @@ const StudentAccount = () => {
             </Grid>
             <Grid item xs={12}>
                 <MainCard title="Tài khoản học sinh">
-
+                    <TableContainer component={Paper}>
+                        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>#</TableCell>
+                                    <TableCell align="left">Họ và tên</TableCell>
+                                    <TableCell align="left">Mã học sinh</TableCell>
+                                    <TableCell align="left">Tên phụ huynh</TableCell>
+                                    <TableCell align="center">Số điện thoại</TableCell>
+                                    <TableCell align="left">Email</TableCell>
+                                    <TableCell align="center">Tài khoản</TableCell>
+                                    <TableCell align="center">Dân tộc</TableCell>
+                                    <TableCell align="left">Quê quán</TableCell>
+                                    <TableCell align="left">Nơi ở</TableCell>
+                                    <TableCell align="right">
+                                        <IconButton component="span">
+                                            <AddCircleOutlineIcon />
+                                        </IconButton>
+                                    </TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>{studentList.length === 0
+                                ?
+                                <TableRow
+                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                >
+                                    <TableCell width={"100%"}>
+                                        <LinearProgress />
+                                    </TableCell>
+                                </TableRow>
+                                :
+                                studentList.map((row, index) => (
+                                    <TableRow
+                                        key={index}
+                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                    >
+                                        <TableCell width={"30px"}>{index + 1}</TableCell>
+                                        <TableCell align="left" sx={{ minWidth: '160px' }}>{row.account.name}</TableCell>
+                                        <TableCell align="left" sx={{ minWidth: '120px' }}>{row.idStudent}</TableCell>
+                                        <TableCell align="left" sx={{ minWidth: '160px' }}>{row.parent}</TableCell>
+                                        <TableCell align="center" sx={{ minWidth: '120px' }}>{row.phoneNumber}</TableCell>
+                                        <TableCell align="left" sx={{ minWidth: '120px' }}>{row.email}</TableCell>
+                                        <TableCell align="center" sx={{ minWidth: '100px' }}>{row.account.username}</TableCell>
+                                        <TableCell align="center" sx={{ minWidth: '80px' }}>{row.ethnic}</TableCell>
+                                        <TableCell align="left" sx={{ minWidth: '300px'}}>{row.homeTown}</TableCell>
+                                        <TableCell align="left" sx={{ minWidth: '300px' }}>{row.address}</TableCell>
+                                        <TableCell align="right" sx={{ width: '70px', display: 'flex', justifyContent: 'right' }}>
+                                            <IconButton color="error" component="span" onClick={() => handleDelete(index)}>
+                                                <DeleteIcon />
+                                            </IconButton>
+                                            <IconButton color="primary" component="span" onClick={() => handleEdit(row._id)}>
+                                                <EditIcon />
+                                            </IconButton>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
                 </MainCard>
             </Grid>
         </Grid>

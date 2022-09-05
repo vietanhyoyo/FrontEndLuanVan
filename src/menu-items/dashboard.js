@@ -26,6 +26,12 @@ const dashboard = {
             icon: icons.IconWindow,
             children: [
                 {
+                    id: 'grade',
+                    title: 'Khối',
+                    type: 'item',
+                    url: '/manager/grade',
+                },
+                {
                     id: 'schoolyear',
                     title: 'Năm học',
                     type: 'item',
@@ -36,7 +42,7 @@ const dashboard = {
                     title: 'Lớp học',
                     type: 'item',
                     url: '/manager/class',
-                }
+                },
             ]
         }
     ]

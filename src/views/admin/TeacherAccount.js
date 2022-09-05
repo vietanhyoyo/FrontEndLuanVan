@@ -73,6 +73,7 @@ const TeacherAccount = () => {
                         <TableCell>#</TableCell>
                         <TableCell align="left">Họ và tên</TableCell>
                         <TableCell align="left">Lớp chủ nhiệm</TableCell>
+                        <TableCell align="center">Chức vụ</TableCell>
                         <TableCell align="left">Số điện thoại</TableCell>
                         <TableCell align="left">Email</TableCell>
                         <TableCell align="left">Tài khoản</TableCell>
@@ -107,7 +108,8 @@ const TeacherAccount = () => {
                         >
                             <TableCell width={"30px"}>{index + 1}</TableCell>
                             <TableCell align="left" sx={{ minWidth: '160px' }}>{row.account.name}</TableCell>
-                            <TableCell align="center" sx={{ minWidth: '128px' }}>{row.homeroomTeacher ? row.homeroomClass.name : ' '}</TableCell>
+                            <TableCell align="center" sx={{ minWidth: '128px' }}>{row.homeroomTeacher ? row.homeroomClass.name : '-'}</TableCell>
+                            <TableCell align="center" sx={{ minWidth: '128px' }}>{row.position || '-'}</TableCell>
                             <TableCell align="center" sx={{ minWidth: '80px' }}>{row.phone}</TableCell>
                             <TableCell align="left" sx={{ minWidth: '120px' }}>{row.email}</TableCell>
                             <TableCell align="center" sx={{ minWidth: '100px' }}>{row.account.username}</TableCell>
@@ -116,7 +118,7 @@ const TeacherAccount = () => {
                             <TableCell align="left" sx={{ minWidth: '80px' }}>{row.ethnic}</TableCell>
                             <TableCell align="left" sx={{ minWidth: '300px' }}>{row.homeTown}</TableCell>
                             <TableCell align="left" sx={{ minWidth: '300px' }}>{row.residence}</TableCell>
-                            <TableCell align="right" sx={{ width: '50px', display: 'flex', justifyContent: 'right' }}>
+                            <TableCell align="right" sx={{ width: '70px', display: 'flex', justifyContent: 'right' }}>
                                 <IconButton color="error" component="span" onClick={() => handleDelete(index)}>
                                     <DeleteIcon />
                                 </IconButton>
