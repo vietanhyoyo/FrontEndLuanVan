@@ -99,7 +99,8 @@ const TeacherAccount = () => {
                                     navigate('/manager/add-teacher');
                                 }}>
                                 <AddCircleOutlineIcon />
-                            </IconButton></TableCell>
+                            </IconButton>
+                        </TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>{teacherList.length === 0

@@ -29,6 +29,11 @@ class TeacherService extends BaseService {
         const result = await this.api.post('/teacher/update-teacher', { account, teacher });
         return result;
     }
+
+    getTeacherBySubject = async (id, classID) => {
+        const result = await this.api.post('/teacher/get-teacher-by-subject', { id, classID });
+        return result;
+    }
 }
 
 export default TeacherService;

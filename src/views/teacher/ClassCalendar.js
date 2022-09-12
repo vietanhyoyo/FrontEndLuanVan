@@ -54,7 +54,7 @@ const ClassCalendar = () => {
                         </AccordionSummary>
                         <AccordionDetails sx={{ padding: '0px' }}>
                             <TableContainer>
-                                <Table sx={{ minWidth: 450 }} aria-label="simple table">
+                                <Table sx={{ minWidth: 450 }} aria-label="simple table" size="small">
                                     <TableHead>
                                         <TableRow>
                                             <TableCell align="center">Tiết</TableCell>

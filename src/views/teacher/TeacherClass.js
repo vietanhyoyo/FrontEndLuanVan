@@ -1,11 +1,10 @@
 // material-ui
-import { Grid, Typography } from '@mui/material';
+import { Grid } from '@mui/material';
 
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
 import LabelCard from 'ui-component/class/LabelCard';
 // material-ui
-import { styled, useTheme } from '@mui/material/styles';
 import New from './teacher-class/New';
 
 import { gridSpacing } from 'store/constant';
