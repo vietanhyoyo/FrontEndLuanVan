@@ -64,7 +64,7 @@ const ScheduleList = () => {
 
     const handleAddSchedule = async () => {
         try {
-            const result = await scheduleService.addSchedule(schedule);
+            await scheduleService.addSchedule(schedule);
             getAPI()
             handleClose();
         } catch (error) {
@@ -147,7 +147,7 @@ const ScheduleList = () => {
             <DialogTitle>
                 {"Thêm mới một lớp học"}
             </DialogTitle>
-            <DialogContent sx={{}}>
+            <DialogContent>
                 <Box sx={{ paddingTop: '20px', width: 400, display: 'flex', justifyContent: 'space-between' }}>
                     <TextField
                         required

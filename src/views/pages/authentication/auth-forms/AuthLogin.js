@@ -86,6 +86,8 @@ const FirebaseLogin = ({ ...others }) => {
                     localStorage.setItem('REFRESH_TOKEN', res.refreshToken);
                     if (res.role === 0)
                         navigate('/dashboard')
+                    else if (res.role === 1)
+                        navigate('/teacher/teacher-route')
                     else
                         navigate('/student/home')
                 }

@@ -34,6 +34,11 @@ class TeacherService extends BaseService {
         const result = await this.api.post('/teacher/get-teacher-by-subject', { id, classID });
         return result;
     }
+
+    getInformation = async () => {
+        const result = await this.api.get('/teacher/get-teacher-information');
+        return result;
+    }
 }
 
 export default TeacherService;
