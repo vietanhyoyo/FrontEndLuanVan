@@ -8,8 +8,10 @@ import {
 import { IconSquarePlus } from '@tabler/icons';
 import SubjectService from 'services/objects/subject.service';
 import moment from 'moment';
+import LessonService from 'services/objects/lesson.service';
 
 const subjectService = new SubjectService();
+const lessonService = new LessonService();
 
 
 function formatInputDate(dateString) {
@@ -19,7 +21,7 @@ function formatInputDate(dateString) {
     return moment(date).format('YYYY-MM-DD');
 }
 
-const AddLesson = () => {
+const AddLesson = (props) => {
     const [openAddLesson, setOpenAddLesson] = useState(false);
     const [subjectList, setSubjectList] = useState([]);
     const [subjectSelect, setSubjectSelect] = useState(-1);
@@ -35,7 +37,23 @@ const AddLesson = () => {
             const result = await subjectService.getAll();
             const docs = result.data;
             setSubjectList(docs);
-            console.log(docs)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const handleSubmit = async () => {
+        const postData = {
+            ...lesson,
+            subject: subjectList[subjectSelect]._id,
+            week: props.week._id,
+            grade: props.grade
+        };
+
+        try {
+            const result = await lessonService.add(postData);
+            const docs = result.data;
+            console.log(docs);
         } catch (error) {
             console.log(error);
         }
@@ -66,8 +84,11 @@ const AddLesson = () => {
                             type="text"
                             sx={{ width: '100%' }}
                             InputLabelProps={{ shrink: true, }}
-                        // value={week.name}
-                        // onChange={(event) => handleChangeNameWeek(event.target.value)}
+                            value={lesson.title}
+                            onChange={(event) => setLesson(prev => ({
+                                ...prev,
+                                title: event.target.value
+                            }))}
                         />
                     </Box>
                     <Box sx={{ padding: '14px 0' }}>
@@ -79,8 +100,11 @@ const AddLesson = () => {
                             type="text"
                             sx={{ width: '100%' }}
                             InputLabelProps={{ shrink: true, }}
-                        // value={week.name}
-                        // onChange={(event) => handleChangeNameWeek(event.target.value)}
+                            value={lesson.note}
+                            onChange={(event) => setLesson(prev => ({
+                                ...prev,
+                                note: event.target.value
+                            }))}
                         />
                     </Box>
                     <Box sx={{ padding: '14px 0', display: "flex", justifyContent: "space-between" }}>
@@ -118,7 +142,7 @@ const AddLesson = () => {
             </DialogContent>
             <DialogActions>
                 <Button onClick={() => setOpenAddLesson(false)}>Hủy</Button>
-                <Button autoFocus onClick={() => setOpenAddLesson(false)}>
+                <Button autoFocus onClick={handleSubmit}>
                     Thêm
                 </Button>
             </DialogActions>

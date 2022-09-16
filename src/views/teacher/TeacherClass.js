@@ -3,20 +3,71 @@ import {
     Grid, Box, Typography, FormControl, DialogActions, DialogTitle, DialogContent,
     MenuItem, Select, IconButton, Dialog, Button, TextField, InputLabel
 } from '@mui/material';
-import { IconSquarePlus } from '@tabler/icons';
 
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
 import LabelCard from 'ui-component/class/LabelCard';
-// material-ui
-import New from './teacher-class/New';
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { gridSpacing } from 'store/constant';
 import Content from './teacher-class/Content';
 import WeekList from './teacher-week-list/WeekList';
 import AddLesson from './teacher-class/AddLesson';
+import ClassService from 'services/objects/class.service';
+import LessonService from 'services/objects/lesson.service';
+import { useParams } from 'react-router-dom';
+
+const classService = new ClassService();
+const lessonService = new LessonService();
 
 const TeacherClass = () => {
+
+    const { classID } = useParams();
+
+    const [week, setWeek] = useState({
+        _id: "",
+        name: "",
+        semester: "",
+        startDate: "",
+        endDate: "",
+        isDelete: ""
+    });
+    const [classObject, setClassObject] = useState({
+        _id: "",
+        grade: ""
+    });
+    const [subjectLessonList, setSubjectLessonList] = useState([]);
+    const [subjectSelect, setSubjectSelect] = useState(0);
+
+    const getClass = async () => {
+        try {
+            const result = await classService.getClassById(classID);
+            setClassObject(result.data);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const changeWeek = (input) => {
+        setWeek(input)
+    }
+
+    const getSubjectLessonList = async () => {
+        try {
+            const result = await lessonService.getSubjectInWeek(classObject.grade, week._id);
+            setSubjectLessonList(result.data);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    console.log("reload")
+
+    useEffect(() => {
+        if (classObject._id === "") getClass();
+        if (week._id !== "" && classObject.grade !== "") {
+            getSubjectLessonList();
+        }
+    }, [week, classObject])
+
     return (
         <>
             <Grid container spacing={gridSpacing} >
@@ -36,17 +87,25 @@ const TeacherClass = () => {
                                         }}>
                                             <Typography variant="h3">Thông tin tuần học</Typography>
                                             <Box>
-                                                <AddLesson />
+                                                <AddLesson grade={classObject.grade} week={week} />
                                                 <FormControl>
                                                     <Select
                                                         labelId="mon"
-                                                        value={1}
+                                                        value={subjectSelect}
                                                         size="small"
-                                                    // onChange={event => setSemester(event.target.value)}
+                                                        onChange={event => setSubjectSelect(event.target.value)}
                                                     >
-                                                        <MenuItem value={1}>Toán</MenuItem>
-                                                        <MenuItem value={2}>Tập đọc</MenuItem>
-                                                        <MenuItem value={3}>Chính tả</MenuItem>
+                                                        {
+                                                            subjectLessonList.length === 0
+                                                                ?
+                                                                <MenuItem value={0}>Rỗng</MenuItem>
+                                                                :
+                                                                subjectLessonList.map((row, index) => {
+                                                                    return <MenuItem key={index} value={index}>
+                                                                        {row.name}
+                                                                    </MenuItem>
+                                                                })
+                                                        }
                                                     </Select>
                                                 </FormControl>
                                             </Box>
@@ -59,7 +118,7 @@ const TeacherClass = () => {
                             </Grid>
                         </Grid>
                         <Grid item lg={2} md={12} sm={12} xs={12}>
-                            <WeekList />
+                            <WeekList changeWeek={changeWeek} />
                         </Grid>
                     </Grid>
                 </Grid>

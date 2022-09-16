@@ -1,7 +1,7 @@
 
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
-import { useState, useEffect } from 'react'
+import { useState, useEffect, memo } from 'react'
 // material-ui
 import {
     Button, Box, Dialog, DialogTitle, DialogContent, DialogActions,
@@ -22,33 +22,33 @@ function formatInputDate(dateString) {
 
 const lessonService = new LessonService();
 
-const WeekList = () => {
+const WeekList = (props) => {
 
     const [loading, setLoading] = useState(true);
-    const [open, setOpen] = useState(false);
+    // const [open, setOpen] = useState(false);
     const [weekList, setWeekList] = useState([]);
-    const [selectWeek, setSelectWeek] = useState(1);
+    const [selectWeek, setSelectWeek] = useState(0);
     const [semester, setSemester] = useState(1)
-    const [week, setWeek] = useState(() => {
-        const date = new Date(Date.now());
-        let semester;
-        if (date.getMonth() + 1 > 6) {
-            semester = '1';
-        } else semester = '2';
-        return {
-            semester,
-            name: "1",
-            startDate: formatInputDate(''),
-            endDate: formatInputDate('')
-        }
-    })
+    // const [week, setWeek] = useState(() => {
+    //     const date = new Date(Date.now());
+    //     let semester;
+    //     if (date.getMonth() + 1 > 6) {
+    //         semester = '1';
+    //     } else semester = '2';
+    //     return {
+    //         semester,
+    //         name: "1",
+    //         startDate: formatInputDate(''),
+    //         endDate: formatInputDate('')
+    //     }
+    // })
 
     const getAPI = async () => {
         try {
             const result = await lessonService.getAll(semester.toString());
+            props.changeWeek(result.data[0]);
             setWeekList(result.data)
             setLoading(false);
-            console.log(result);
         } catch (error) {
             console.log(error)
         }
@@ -58,30 +58,31 @@ const WeekList = () => {
         getAPI();
     }, [semester])
 
-    const handleClose = () => {
-        setOpen(false);
-    };
+    // const handleClose = () => {
+    //     setOpen(false);
+    // };
 
-    const handleOpen = () => {
-        setOpen(true);
-    }
+    // const handleOpen = () => {
+    //     setOpen(true);
+    // }
 
-    const handleChangeNameWeek = (value) => {
-        let weekNumber = value;
-        if (Number(value) < 1) weekNumber = '1';
+    // const handleChangeNameWeek = (value) => {
+    //     let weekNumber = value;
+    //     if (Number(value) < 1) weekNumber = '1';
 
-        setWeek(prev => ({
-            ...prev,
-            name: weekNumber
-        }))
-    }
+    //     setWeek(prev => ({
+    //         ...prev,
+    //         name: weekNumber
+    //     }))
+    // }
 
-    const handleAddWeek = () => {
-        console.log(week);
-    }
+    // const handleAddWeek = () => {
+    //     console.log(week);
+    // }
 
     const handleSelectWeek = (index) => {
         setSelectWeek(index)
+        props.changeWeek(weekList[index]);
     }
 
     return <>
@@ -112,7 +113,7 @@ const WeekList = () => {
                         </Button>)}
                     </Box>}
         </MainCard>
-        <Dialog
+        {/* <Dialog
             open={open}
             onClose={handleClose}
         >
@@ -171,8 +172,8 @@ const WeekList = () => {
                     Thêm
                 </Button>
             </DialogActions>
-        </Dialog>
+        </Dialog> */}
     </>
 }
 
-export default WeekList;
+export default memo(WeekList);
