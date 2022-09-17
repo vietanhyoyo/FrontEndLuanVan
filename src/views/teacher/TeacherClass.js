@@ -1,7 +1,7 @@
 // material-ui
 import {
-    Grid, Box, Typography, FormControl, DialogActions, DialogTitle, DialogContent,
-    MenuItem, Select, IconButton, Dialog, Button, TextField, InputLabel
+    Grid, Box, Typography, FormControl,
+    MenuItem, Select
 } from '@mui/material';
 
 // project imports
@@ -22,7 +22,6 @@ const lessonService = new LessonService();
 const TeacherClass = () => {
 
     const { classID } = useParams();
-
     const [week, setWeek] = useState({
         _id: "",
         name: "",
@@ -37,6 +36,7 @@ const TeacherClass = () => {
     });
     const [subjectLessonList, setSubjectLessonList] = useState([]);
     const [subjectSelect, setSubjectSelect] = useState(0);
+    const [lessonList, setLessonList] = useState([]);
 
     const getClass = async () => {
         try {
@@ -46,6 +46,26 @@ const TeacherClass = () => {
             console.log(error);
         }
     }
+
+    const getLessonList = async () => {
+        if (week._id === "" ||
+            classObject.grade === "" ||
+            subjectLessonList.length === 0)
+            return;
+        else
+            try {
+                const result = await lessonService.getLessonsBySubjectWeekGrade(
+                    classObject.grade,
+                    week._id,
+                    subjectLessonList[subjectSelect]._id
+                )
+                setLessonList(result.data)
+            } catch (error) {
+                console.log(error);
+            }
+    }
+
+    console.log("load")
 
     const changeWeek = (input) => {
         setWeek(input)
@@ -59,14 +79,14 @@ const TeacherClass = () => {
             console.log(error);
         }
     }
-    console.log("reload")
 
     useEffect(() => {
         if (classObject._id === "") getClass();
-        if (week._id !== "" && classObject.grade !== "") {
+        if (week._id !== "" && classObject.grade !== "" && subjectLessonList.length === 0) {
             getSubjectLessonList();
         }
-    }, [week, classObject])
+        getLessonList()
+    }, [week, classObject, subjectSelect, subjectLessonList])
 
     return (
         <>
@@ -111,8 +131,14 @@ const TeacherClass = () => {
                                             </Box>
                                         </Box>
                                     }>
-                                        <Content />
-                                        <Content />
+                                        {
+                                            lessonList.length === 0
+                                                ? <p>Chưa có nội dung</p>
+                                                : lessonList.map((row, index) =>
+                                                    <Content key={index} lesson={row}/>
+                                                )
+
+                                        }
                                     </MainCard>
                                 </Grid>
                             </Grid>

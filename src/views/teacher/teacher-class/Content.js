@@ -1,11 +1,20 @@
 
 import { useTheme } from "@mui/material/styles"
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, Button } from "@mui/material";
 import ListContainer from "./ListContainer";
 import Text from "ui-component/Text";
 import Link from "ui-component/Link";
+import EditContent from "./EditContent";
+import moment from "moment";
 
-const Content = () => {
+function formatInputDate(dateString) {
+    let date = new Date(Date.now());
+    if (dateString !== '')
+        date = new Date(dateString);
+    return moment(date).format('DD-MM-YYYY');
+}
+
+const Content = (props) => {
 
     const theme = useTheme();
 
@@ -39,24 +48,14 @@ const Content = () => {
         <>
             <Box marginBottom={"16px"}>
                 <Box sx={topStyle}>
-                    <Typography sx={titleStyle} variant="h5">Tiêu đề</Typography>
-                    <Typography variant="caption" paddingTop="8px">03/04/2022</Typography>
+                    <Typography sx={titleStyle} variant="h5">{props.lesson.title}</Typography>
+                    <Typography variant="caption" paddingTop="8px">{
+                        props.lesson.date ? formatInputDate(props.lesson.date) : formatInputDate('')
+                    }</Typography>
                 </Box>
                 <Box sx={contentStyle}>
-                    <Text>Ngày 10 các em được nghĩ không cần phải đến trường làm gì</Text>
-                    <Text>Ngày 20 chúng ta có lịch hợp phụ huynh không cần đến trường mà hợp online
-                        qua đường <Link src="https://mui.com/system/styled/#how-to-use-components-selector-api"> link </Link> cô đưa các em nhớ kêu phụ huynh vào đúng giờ và có mặt
-                        đầy đủ nghe </Text>
-                    <ListContainer
-                        title={"Các video của tháng này"}
-                        array={[
-                            {text: "Video 1 môn Toán", type: "link", href: "#"},
-                            {text: "Nhớ làm bài tập đầy đủ", type: "text", href: "#"}
-                        ]}
-                    />
-                    <Text>Ngày 20 chúng ta có lịch hợp phụ huynh không cần đến trường mà hợp online
-                        qua đường link cô đưa các em nhớ kêu phụ huynh vào đúng giờ và có mặt
-                        đầy đủ nghe </Text>
+                    <Text>{props.lesson.note}</Text>
+                    <EditContent lesson={props.lesson} />
                 </Box>
             </Box>
         </>)
