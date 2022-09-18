@@ -65,8 +65,6 @@ const TeacherClass = () => {
             }
     }
 
-    console.log("load")
-
     const changeWeek = (input) => {
         setWeek(input)
     }
@@ -135,9 +133,8 @@ const TeacherClass = () => {
                                             lessonList.length === 0
                                                 ? <p>Chưa có nội dung</p>
                                                 : lessonList.map((row, index) =>
-                                                    <Content key={index} lesson={row}/>
+                                                    <Content key={index} lesson={row} />
                                                 )
-
                                         }
                                     </MainCard>
                                 </Grid>

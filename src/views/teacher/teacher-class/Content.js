@@ -6,6 +6,9 @@ import Text from "ui-component/Text";
 import Link from "ui-component/Link";
 import EditContent from "./EditContent";
 import moment from "moment";
+import { useState, useEffect, useRef } from 'react'
+import LessonService from "services/objects/lesson.service";
+import ReactPlayer from 'react-player'
 
 function formatInputDate(dateString) {
     let date = new Date(Date.now());
@@ -14,9 +17,44 @@ function formatInputDate(dateString) {
     return moment(date).format('DD-MM-YYYY');
 }
 
+const contentStyle = {
+    marginTop: "10px",
+    paddingRight: "0px",
+    paddingLeft: "0px"
+}
+
+const lessonService = new LessonService();
+
 const Content = (props) => {
 
     const theme = useTheme();
+    const [lessonContent, setLessonContent] = useState({
+        _id: '',
+        text: ''
+    });
+    const divRender = useRef();
+
+    const getAPI = async () => {
+        try {
+            const result = await lessonService.getLessonContent(props.lesson._id);
+            const data = result.data;
+            if (data !== "") {
+                setLessonContent(data);
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    useEffect(() => {
+        getAPI()
+        return () => {
+            setLessonContent({
+                _id: '',
+                text: ''
+            })
+        }
+    }, [props.lesson])
 
     const topStyle = {
         display: "flex",
@@ -25,12 +63,6 @@ const Content = (props) => {
         borderBottom: "1px solid",
         borderColor: theme.palette.grey[200],
         paddingBottom: "0px"
-    }
-
-    const contentStyle = {
-        marginTop: "10px",
-        paddingRight: "0px",
-        paddingLeft: "0px"
     }
 
     const titleStyle = {
@@ -44,6 +76,32 @@ const Content = (props) => {
         paddingTop: "10px"
     }
 
+    const convertHtml = (xmlString) => {
+        if(!xmlString) return <div></div>
+        const str = `<div class="video-reactiv>`
+        if (xmlString === "") return <div></div>
+
+        // const firstIndex = xmlString.indexOf("<oembed url=");
+        const firstIndex = xmlString.indexOf("<iframe ");
+        if (firstIndex === -1) {
+            divRender.current.innerHTML = xmlString
+            return <div></div>
+        } else {
+            divRender.current.innerHTML = xmlString
+
+            // const endIndex = xmlString.indexOf("></oembed></figure>") + 19;
+            const endIndex = xmlString.indexOf("></iframe>") + 10;
+
+            let videoString = xmlString.substring(firstIndex, endIndex);
+            const first = videoString.indexOf('"');
+            const end = videoString.lastIndexOf('"');
+            videoString = videoString.substring(first + 1, end);
+
+            // return <ReactPlayer width="100%" height="400px" controls={true} url={videoString} />;
+            return <div></div>
+        }
+    }
+
     return (
         <>
             <Box marginBottom={"16px"}>
@@ -55,7 +113,9 @@ const Content = (props) => {
                 </Box>
                 <Box sx={contentStyle}>
                     <Text>{props.lesson.note}</Text>
-                    <EditContent lesson={props.lesson} />
+                    <div ref={divRender}></div>
+                    {convertHtml(lessonContent.text)}
+                    <EditContent lesson={props.lesson} reLoad={getAPI} />
                 </Box>
             </Box>
         </>)

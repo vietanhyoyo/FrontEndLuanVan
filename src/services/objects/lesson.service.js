@@ -18,7 +18,17 @@ class LessonService extends BaseService {
     }
 
     getLessonsBySubjectWeekGrade = async (grade, week, subject) => {
-        const result = await this.api.post('/lesson//get-lessons-by-subject-week-grade', { grade, week, subject});
+        const result = await this.api.post('/lesson/get-lessons-by-subject-week-grade', { grade, week, subject });
+        return result;
+    }
+
+    addLessonContent = async (text, lessonID) => {
+        const result = await this.api.post('/lesson/add-lesson-content', { text, lessonID });
+        return result;
+    }
+
+    getLessonContent = async (lessonID) => {
+        const result = await this.api.post('/lesson/get-lesson-content-by-lesson', { lessonID });
         return result;
     }
 }

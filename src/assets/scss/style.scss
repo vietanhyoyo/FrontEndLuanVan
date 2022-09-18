@@ -1,6 +1,5 @@
 // color variants
 @import 'themes-vars.module.scss';
-
 // third-party
 @import '~react-perfect-scrollbar/dist/css/styles.css';
 
@@ -54,6 +53,13 @@
 }
 
 .ck-editor__editable_inline {
+    min-height: 500px;
+}
+
+/*Thêm mới css */
+iframe {
+    width: 100%;
+    height: auto;
     min-height: 500px;
 }
 
