@@ -22,6 +22,7 @@ const lessonService = new LessonService();
 const TeacherClass = () => {
 
     const { classID } = useParams();
+    const [loading, setLoading] = useState(true)
     const [week, setWeek] = useState({
         _id: "",
         name: "",
@@ -59,7 +60,37 @@ const TeacherClass = () => {
                     week._id,
                     subjectLessonList[subjectSelect]._id
                 )
-                setLessonList(result.data)
+                if (result.data === "") {
+                    setLessonList([])
+                }
+                else {
+                    setLessonList(result.data)
+                    if (loading)
+                        setLoading(false)
+                }
+            } catch (error) {
+                console.log(error);
+            }
+    }
+
+    const getLessonListBySubject = async (index) => {
+        if (week._id === "" ||
+            classObject.grade === "" ||
+            subjectLessonList.length === 0)
+            return;
+        else
+            try {
+                const result = await lessonService.getLessonsBySubjectWeekGrade(
+                    classObject.grade,
+                    week._id,
+                    subjectLessonList[index]._id
+                )
+                if (result.data === "") {
+                    setLessonList([])
+                }
+                else {
+                    setLessonList(result.data)
+                }
             } catch (error) {
                 console.log(error);
             }
@@ -72,18 +103,46 @@ const TeacherClass = () => {
     const getSubjectLessonList = async () => {
         try {
             const result = await lessonService.getSubjectInWeek(classObject.grade, week._id);
-            setSubjectLessonList(result.data);
+            if (result.data === "") {
+                setSubjectLessonList([]);
+            } else {
+                setSubjectLessonList(result.data);
+            }
+            if (loading)
+                setLoading(false)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const getSubjectLessonListWeekID = async (weekID) => {
+        try {
+            const result = await lessonService.getSubjectInWeek(classObject.grade, weekID);
+            if (result.data === "") {
+                setSubjectLessonList([]);
+            } else {
+                setSubjectLessonList(result.data);
+            }
+            if (loading)
+                setLoading(false)
         } catch (error) {
             console.log(error);
         }
     }
 
     useEffect(() => {
-        if (classObject._id === "") getClass();
-        if (week._id !== "" && classObject.grade !== "" && subjectLessonList.length === 0) {
-            getSubjectLessonList();
+        if (classObject._id === "") {
+            console.log("1")
+            getClass();
         }
-        getLessonList()
+        if (week._id !== "" && classObject.grade !== "" && subjectLessonList.length === 0 && loading) {
+            getSubjectLessonList();
+            console.log("2")
+        }
+        if (subjectLessonList.length > 0) {
+            console.log("3")
+            getLessonList()
+        }
     }, [week, classObject, subjectSelect, subjectLessonList])
 
     return (
@@ -91,10 +150,10 @@ const TeacherClass = () => {
             <Grid container spacing={gridSpacing} >
                 <Grid item xs={12}>
                     <Grid container spacing={gridSpacing}>
-                        <Grid item lg={10} md={12} sm={12} xs={12}>
+                        <Grid item lg={10} md={9} sm={12} xs={12}>
                             <Grid container spacing={gridSpacing}>
                                 <Grid item sm={12} xs={12} md={12} lg={12}>
-                                    <LabelCard isLoading={false} />
+                                    <LabelCard isLoading={false} classroomName={classObject.name} />
                                 </Grid>
                                 <Grid item sm={12} xs={12} md={12} lg={12}>
                                     <MainCard title={
@@ -103,18 +162,18 @@ const TeacherClass = () => {
                                             justifyContent: "space-between",
                                             width: "100%"
                                         }}>
-                                            <Typography variant="h3">Thông tin tuần học</Typography>
-                                            <Box>
+                                            <Typography variant="h3">Thông tin tuần học {week.name}</Typography>
+                                            <Box display={'flex'}>
                                                 <AddLesson grade={classObject.grade} week={week} />
                                                 <FormControl>
                                                     <Select
                                                         labelId="mon"
                                                         value={subjectSelect}
                                                         size="small"
-                                                        onChange={event => setSubjectSelect(event.target.value)}
+                                                        onChange={(event) => setSubjectSelect(event.target.value)}
                                                     >
                                                         {
-                                                            subjectLessonList.length === 0
+                                                            subjectLessonList === []
                                                                 ?
                                                                 <MenuItem value={0}>Rỗng</MenuItem>
                                                                 :
@@ -140,8 +199,14 @@ const TeacherClass = () => {
                                 </Grid>
                             </Grid>
                         </Grid>
-                        <Grid item lg={2} md={12} sm={12} xs={12}>
-                            <WeekList changeWeek={changeWeek} />
+                        <Grid item lg={2} md={3} sm={12} xs={12}>
+                            <WeekList
+                                changeWeek={changeWeek}
+                                getSubjectLessonList={(weekID) => {
+                                    getSubjectLessonListWeekID(weekID);
+                                    setLoading(true)
+                                    setSubjectSelect(0)
+                                }} />
                         </Grid>
                     </Grid>
                 </Grid>

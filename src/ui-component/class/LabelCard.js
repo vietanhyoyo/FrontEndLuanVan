@@ -88,7 +88,7 @@ const AnimateText = styled(Typography)(({ theme }) => ({
 
 // ==============================|| DASHBOARD - TOTAL INCOME DARK CARD ||============================== //
 
-const LabelCard = ({ isLoading }) => {
+const LabelCard = ({ isLoading, classroomName }) => {
 
     return (
         <>
@@ -99,7 +99,7 @@ const LabelCard = ({ isLoading }) => {
                     <Box sx={{ p: 2 }}>
                         <List sx={{ py: 0, display: "flex", justifyContent: "space-between" }}>
                             <Typography variant="h2" sx={{ color: '#fff' }}>
-                                Lớp 3A
+                                Lớp {classroomName}
                             </Typography>
                             <StyledBadge
                                 anchorOrigin={{ vertical: 'top', horizontal: 'right' }}

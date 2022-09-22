@@ -1,14 +1,12 @@
 
 import { useTheme } from "@mui/material/styles"
 import { Box, Typography, Button } from "@mui/material";
-import ListContainer from "./ListContainer";
 import Text from "ui-component/Text";
-import Link from "ui-component/Link";
 import EditContent from "./EditContent";
 import moment from "moment";
 import { useState, useEffect, useRef } from 'react'
 import LessonService from "services/objects/lesson.service";
-import ReactPlayer from 'react-player'
+// import ReactPlayer from 'react-player'
 
 function formatInputDate(dateString) {
     let date = new Date(Date.now());
@@ -40,6 +38,12 @@ const Content = (props) => {
             const data = result.data;
             if (data !== "") {
                 setLessonContent(data);
+            } else {
+                console.log("Nodata")
+                setLessonContent({
+                    _id: '',
+                    text: '- - - - - - Chưa có nội dung - - - - - -'
+                })
             }
         } catch (error) {
             console.log(error)
@@ -77,8 +81,8 @@ const Content = (props) => {
     }
 
     const convertHtml = (xmlString) => {
-        if(!xmlString) return <div></div>
-        const str = `<div class="video-reactiv>`
+        if (!xmlString) return <div></div>
+        // const str = `<div class="video-reactiv>`
         if (xmlString === "") return <div></div>
 
         // const firstIndex = xmlString.indexOf("<oembed url=");
@@ -90,12 +94,12 @@ const Content = (props) => {
             divRender.current.innerHTML = xmlString
 
             // const endIndex = xmlString.indexOf("></oembed></figure>") + 19;
-            const endIndex = xmlString.indexOf("></iframe>") + 10;
+            /*const endIndex = xmlString.indexOf("></iframe>") + 10;
 
             let videoString = xmlString.substring(firstIndex, endIndex);
             const first = videoString.indexOf('"');
             const end = videoString.lastIndexOf('"');
-            videoString = videoString.substring(first + 1, end);
+            videoString = videoString.substring(first + 1, end);*/
 
             // return <ReactPlayer width="100%" height="400px" controls={true} url={videoString} />;
             return <div></div>
@@ -112,13 +116,26 @@ const Content = (props) => {
                     }</Typography>
                 </Box>
                 <Box sx={contentStyle}>
-                    <Text>{props.lesson.note}</Text>
+                    <Text
+                        sx={noteText}
+                    >
+                        {props.lesson.note}
+                    </Text>
                     <div ref={divRender}></div>
                     {convertHtml(lessonContent.text)}
                     <EditContent lesson={props.lesson} reLoad={getAPI} />
                 </Box>
             </Box>
         </>)
+}
+
+const noteText = {
+    display: "block",
+    textAlign: "right",
+    width: "100%",
+    fontStyle: 'italic',
+    m: 1,
+    color: "gray"
 }
 
 export default Content;

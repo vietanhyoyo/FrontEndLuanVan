@@ -83,6 +83,7 @@ const WeekList = (props) => {
     const handleSelectWeek = (index) => {
         setSelectWeek(index)
         props.changeWeek(weekList[index]);
+        props.getSubjectLessonList(weekList[index]._id)
     }
 
     return <>

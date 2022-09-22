@@ -1,14 +1,20 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, forwardRef } from 'react';
 // material-ui
 import {
     Grid, Box, Typography, FormControl, DialogActions, DialogTitle, DialogContent,
-    MenuItem, Select, IconButton, Dialog, Button, TextField, InputLabel
+    MenuItem, Select, IconButton, Dialog, Button, TextField, InputLabel, Stack,
+    Snackbar
 } from '@mui/material';
 
 import { IconSquarePlus } from '@tabler/icons';
 import SubjectService from 'services/objects/subject.service';
 import moment from 'moment';
 import LessonService from 'services/objects/lesson.service';
+import MuiAlert from '@mui/material/Alert';
+
+const Alert = forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const subjectService = new SubjectService();
 const lessonService = new LessonService();
@@ -25,6 +31,8 @@ const AddLesson = (props) => {
     const [openAddLesson, setOpenAddLesson] = useState(false);
     const [subjectList, setSubjectList] = useState([]);
     const [subjectSelect, setSubjectSelect] = useState(-1);
+    const [status, setStatus] = useState('success');
+    const [alertMessage, setAlertMessage] = useState('Thêm thành công!');
     const [lesson, setLesson] = useState({
         title: "",
         note: "",
@@ -32,28 +40,63 @@ const AddLesson = (props) => {
         subject: "",
     });
 
+    const [open, setOpen] = useState(false);
+
+    const handleAlert = () => {
+        setOpen(true);
+    };
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpen(false);
+    };
+
     const getAPISubjectList = async () => {
         try {
-            const result = await subjectService.getAll();
+            const result = await subjectService.getSubjectsByTeacher();
             const docs = result.data;
+            // console.log(result)
             setSubjectList(docs);
         } catch (error) {
             console.log(error);
         }
     }
 
+    const lessonValidate = () => {
+        if (subjectSelect === -1) {
+            setAlertMessage('Chưa chọn môn học!');
+            setStatus('error');
+            handleAlert();
+            return false;
+        }
+        if (lesson.title.length === 0){
+            setAlertMessage('Tiêu đề chưa hợp lệ!');
+            setStatus('error');
+            handleAlert();
+            return false;
+        }
+        return true;
+    }
+
     const handleSubmit = async () => {
-        const postData = {
-            ...lesson,
-            subject: subjectList[subjectSelect]._id,
-            week: props.week._id,
-            grade: props.grade
-        };
+
+        if (!lessonValidate()) return;
 
         try {
+            const postData = {
+                ...lesson,
+                subject: subjectList[subjectSelect]._id,
+                week: props.week._id,
+                grade: props.grade
+            };
+
             const result = await lessonService.add(postData);
-            const docs = result.data;
-            console.log(docs);
+            setAlertMessage('Đã thêm mới!');
+            setStatus('success');
+            handleAlert();
         } catch (error) {
             console.log(error);
         }
@@ -63,7 +106,7 @@ const AddLesson = (props) => {
         getAPISubjectList();
     }, [])
 
-    return (<>
+    return (<Box sx={{display: 'inline'}}>
         <IconButton color="primary" onClick={() => setOpenAddLesson(true)}>
             <IconSquarePlus />
         </IconButton>
@@ -147,7 +190,14 @@ const AddLesson = (props) => {
                 </Button>
             </DialogActions>
         </Dialog>
-    </>
+        <Stack spacing={2} sx={{ width: '100%' }}>
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity={status} sx={{ width: '100%' }}>
+                    {alertMessage}
+                </Alert>
+            </Snackbar>
+        </Stack>
+    </Box>
     )
 }
 

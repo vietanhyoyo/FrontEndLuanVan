@@ -70,17 +70,17 @@ const ScheduleEditLesson = ({ subjectString, lessonID, classID, subjectProps, on
                 onClose={handleClose}
             >
                 <DialogTitle>
-                    {"Thêm mới một lớp học"}
+                    {"Thêm tiết học"}
                 </DialogTitle>
                 <DialogContent sx={{ width: '300px' }}>
                     <Box mt={3} sx={{ width: '100%' }}>
                         <FormControl fullWidth>
-                            <InputLabel id="year-select-label">Năm học</InputLabel>
+                            <InputLabel id="year-select-label">Môn học</InputLabel>
                             <Select
                                 labelId="year-select-label"
                                 id="year-select"
                                 value={subject}
-                                label="Năm học"
+                                label="Môn học"
                                 onChange={(event) => setSubject(event.target.value)}
                             >
                                 <MenuItem value={-1} >--</MenuItem>)
@@ -91,12 +91,12 @@ const ScheduleEditLesson = ({ subjectString, lessonID, classID, subjectProps, on
                     </Box>
                     <Box mt={3} sx={{ width: '100%' }}>
                         <FormControl fullWidth>
-                            <InputLabel id="year-select-label">Năm học</InputLabel>
+                            <InputLabel id="year-select-label">Giáo viên</InputLabel>
                             <Select
                                 labelId="year-select-label"
                                 id="year-select"
                                 value={teacher}
-                                label="Năm học"
+                                label="Giáo viên"
                                 onChange={(event) => setTeacher(event.target.value)}
                             >
                                 <MenuItem value={-1} >--</MenuItem>)

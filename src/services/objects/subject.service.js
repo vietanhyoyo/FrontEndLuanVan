@@ -12,6 +12,11 @@ class SubjectService extends BaseService {
         return result;
     }
 
+    getSubjectsByTeacher = async () => {
+        const result = await this.api.get('/subject/get-by-teacher');
+        return result;
+    }
+
 }
 
 export default SubjectService;

@@ -99,9 +99,9 @@ export default function ChooseSubject(props) {
     return (
         <>
             <Box>
-                <Button size="small" variant="outlined" onClick={handleClickOpen} sx={{ marginRight: "4px" }}>Thêm</Button>
+                <Chip label="thêm" size="small" variant="outlined" onClick={handleClickOpen} sx={{ marginRight: "4px", marginBottom: "8px" }} />
                 {chipList.map((row, index) => {
-                    return <Chip label={row.name} size="small" sx={{ marginRight: "4px" }} key={index} />
+                    return <Chip label={row.name} size="small" sx={{ marginRight: "4px", marginBottom: "8px" }} key={index} />
                 })}
             </Box>
             <Dialog open={open} onClose={handleClose}>

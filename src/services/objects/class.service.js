@@ -46,6 +46,11 @@ class ClassService extends BaseService {
         const result = await this.api.post('/class/get-class-by-id', { id });
         return result;
     }
+
+    getHomeroomTeacherByClass = async (id) => {
+        const result = await this.api.get(`/class/get-homeroom-teacher-by-class/${id}`);
+        return result;
+    }
 }
 
 export default ClassService;

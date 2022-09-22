@@ -36,18 +36,35 @@ const EditContent = (props) => {
     };
 
     const handleClose = () => {
+        setText("");
         setOpen(false);
     };
 
     const handleSave = async () => {
         try {
             const result = await lessonService.addLessonContent(text, props.lesson._id);
-            // props.reLoad();
+            props.reLoad();
         } catch (error) {
             console.log(error)
         }
         handleClose();
     }
+
+    const getAPI = async () => {
+        try {
+            const result = await lessonService.getLessonContent(props.lesson._id);
+            const data = result.data;
+            if (data !== "") {
+                setText(data.text);
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    React.useEffect(() => {
+        getAPI();
+    },[open])
 
     return (<>
         <div>
@@ -87,7 +104,7 @@ const EditContent = (props) => {
                 </AppBar>
                 <Box>
                     {/* <EditLink /> */}
-                    <Box sx={{ margin: "3rem", height: "400px" }}>
+                    <Box sx={{ margin: "2rem", height: "400px" }}>
                         {/* <CKEditor
                             editor={ClassicEditor}
                             data={text}
@@ -101,14 +118,11 @@ const EditContent = (props) => {
                             theme='snow'
                             value={text}
                             onChange={setText}
-                            style={{ minHeight: '300px' }}
+                            style={{ minHeight: '380px', height: 'auto' }}
                             modules={modules}
                             formats={formats}
                             placeholder={propTypes.placeholder}
                         />
-                    </Box>
-                    <Box>
-                        {text}
                     </Box>
                 </Box>
             </Dialog>
