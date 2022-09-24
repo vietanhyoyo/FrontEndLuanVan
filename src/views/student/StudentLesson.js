@@ -9,9 +9,8 @@ import MainCard from 'ui-component/cards/MainCard';
 import LabelCard from 'ui-component/class/LabelCard';
 import { useState, useEffect } from 'react'
 import { gridSpacing } from 'store/constant';
-import Content from './teacher-class/Content';
-import WeekList from './teacher-week-list/WeekList';
-import AddLesson from './teacher-class/AddLesson';
+import WeekList from './student-lesson/WeekList'
+import ContentLesson from './student-lesson/ContentLesson';
 import ClassService from 'services/objects/class.service';
 import LessonService from 'services/objects/lesson.service';
 import { useParams } from 'react-router-dom';
@@ -19,7 +18,7 @@ import { useParams } from 'react-router-dom';
 const classService = new ClassService();
 const lessonService = new LessonService();
 
-const TeacherClass = () => {
+const StudentLesson = () => {
 
     const { classID } = useParams();
     const [loading, setLoading] = useState(true)
@@ -73,29 +72,6 @@ const TeacherClass = () => {
             }
     }
 
-    const getLessonListBySubject = async (index) => {
-        if (week._id === "" ||
-            classObject.grade === "" ||
-            subjectLessonList.length === 0)
-            return;
-        else
-            try {
-                const result = await lessonService.getLessonsBySubjectWeekGrade(
-                    classObject.grade,
-                    week._id,
-                    subjectLessonList[index]._id
-                )
-                if (result.data === "") {
-                    setLessonList([])
-                }
-                else {
-                    setLessonList(result.data)
-                }
-            } catch (error) {
-                console.log(error);
-            }
-    }
-
     const changeWeek = (input) => {
         setWeek(input)
     }
@@ -132,23 +108,20 @@ const TeacherClass = () => {
 
     useEffect(() => {
         if (classObject._id === "") {
-            console.log("1")
             getClass();
         }
         if (week._id !== "" && classObject.grade !== "" && subjectLessonList.length === 0 && loading) {
             getSubjectLessonList();
-            console.log("2")
         }
         if (subjectLessonList.length > 0) {
-            console.log("3")
             getLessonList()
         }
     }, [week, classObject, subjectSelect, subjectLessonList])
 
     return (
         <>
-            <Grid container spacing={gridSpacing} >
-                <Grid item xs={12}>
+            <Grid container spacing={gridSpacing} sx={{ display: "flex", justifyContent: "center" }} >
+                <Grid item xs={10}>
                     <Grid container spacing={gridSpacing}>
                         <Grid item lg={10} md={9} sm={12} xs={12}>
                             <Grid container spacing={gridSpacing}>
@@ -164,7 +137,6 @@ const TeacherClass = () => {
                                         }}>
                                             <Typography variant="h3">Thông tin tuần học {week.name}</Typography>
                                             <Box display={'flex'}>
-                                                <AddLesson grade={classObject.grade} week={week} />
                                                 <FormControl>
                                                     <Select
                                                         labelId="mon"
@@ -192,7 +164,12 @@ const TeacherClass = () => {
                                             lessonList.length === 0
                                                 ? <p>Chưa có nội dung</p>
                                                 : lessonList.map((row, index) =>
-                                                    <Content key={index} lesson={row} />
+                                                    <ContentLesson
+                                                        key={index}
+                                                        lesson={row}
+                                                        grade={classObject.grade}
+                                                        week={week}
+                                                        getLessonList={getLessonList} />
                                                 )
                                         }
                                     </MainCard>
@@ -215,4 +192,4 @@ const TeacherClass = () => {
     )
 }
 
-export default TeacherClass;
+export default StudentLesson;

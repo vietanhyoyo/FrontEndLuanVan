@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import TeacherService from "services/objects/teacher.service";
 import SiteService from "services/objects/site.service";
 import { useEffect, useState } from "react";
-import ClassCard from "./teacher-class/ClassCard";
+import ClassCard from "./teacher-week-lesson/ClassCard";
 
 const teacherService = new TeacherService();
 
@@ -29,7 +29,7 @@ const SubjectTeacherClass = () => {
             classList.length === 0 ? <div>Chưa tìm thấy</div> :
                 classList.map((row, index) => {
                     return <Box mb={3} key={index}>
-                        <Link to={`/teacher/class/${row._id}`}>
+                        <Link to={`/teacher/weeklesson/${row._id}`}>
                             <ClassCard isLoading={false} classInCharge={row} />
                         </Link>
                     </Box>

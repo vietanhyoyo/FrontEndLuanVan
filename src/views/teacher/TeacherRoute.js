@@ -13,7 +13,7 @@ const TeacherRoute = () => {
             const data = result.data;
             if (data) {
                 if (data.homeroomTeacher) {
-                    navigate(`/teacher/class/${data.homeroomClass}`);
+                    navigate(`/teacher/weeklesson/${data.homeroomClass}`);
                 } else {
                     navigate('/teacher/subject-teacher-class');
                 }

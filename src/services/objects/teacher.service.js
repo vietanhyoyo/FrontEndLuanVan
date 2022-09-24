@@ -44,6 +44,7 @@ class TeacherService extends BaseService {
         const result = await this.api.get('/teacher/get-classes-in-charge-by-teacher');
         return result;
     }
+    
 }
 
 export default TeacherService;

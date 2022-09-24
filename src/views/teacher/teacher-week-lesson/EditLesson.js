@@ -6,9 +6,10 @@ import {
     Snackbar
 } from '@mui/material';
 
-import { IconSquarePlus } from '@tabler/icons';
+import { IconEditCircle } from '@tabler/icons';
 import SubjectService from 'services/objects/subject.service';
 import moment from 'moment';
+import TeacherService from 'services/objects/teacher.service';
 import LessonService from 'services/objects/lesson.service';
 import MuiAlert from '@mui/material/Alert';
 
@@ -18,7 +19,7 @@ const Alert = forwardRef(function Alert(props, ref) {
 
 const subjectService = new SubjectService();
 const lessonService = new LessonService();
-
+const teacherService = new TeacherService();
 
 function formatInputDate(dateString) {
     let date = new Date(Date.now());
@@ -27,19 +28,20 @@ function formatInputDate(dateString) {
     return moment(date).format('YYYY-MM-DD');
 }
 
-const AddLesson = (props) => {
+const EditLesson = (props) => {
     const [openAddLesson, setOpenAddLesson] = useState(false);
     const [subjectList, setSubjectList] = useState([]);
     const [subjectSelect, setSubjectSelect] = useState(-1);
     const [status, setStatus] = useState('success');
     const [alertMessage, setAlertMessage] = useState('Thêm thành công!');
+    const [gradeList, setGradeList] = useState([]);
     const [lesson, setLesson] = useState({
+        _id: "",
         title: "",
         note: "",
         date: null,
         subject: "",
     });
-
     const [open, setOpen] = useState(false);
 
     const handleAlert = () => {
@@ -50,9 +52,27 @@ const AddLesson = (props) => {
         if (reason === 'clickaway') {
             return;
         }
-
         setOpen(false);
     };
+
+    const closeDialog = () => {
+        setOpenAddLesson(false)
+    }
+
+    const getClassInCharge = async () => {
+        try {
+            const result = await teacherService.getClassInCharge();
+            if (result.status === 200) {
+                const docs = result.data;
+                if (docs.classInCharge !== []) {
+                    const array = docs.classInCharge.map(row => row.grade)
+                    setGradeList(array)
+                }
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     const getAPISubjectList = async () => {
         try {
@@ -72,13 +92,24 @@ const AddLesson = (props) => {
             handleAlert();
             return false;
         }
-        if (lesson.title.length === 0){
+        if (lesson.title.length === 0) {
             setAlertMessage('Tiêu đề chưa hợp lệ!');
             setStatus('error');
             handleAlert();
             return false;
         }
         return true;
+    }
+
+    const checkEdit = () => {
+        if (gradeList.length === 0) return false;
+        const bool1 = gradeList.includes(props.grade);
+        let bool2 = true;
+        if (props.lesson) {
+            const idSubjectArray = subjectList.map(row => row._id);
+            bool2 = idSubjectArray.includes(props.lesson.subject);
+        }
+        return bool1 & bool2;
     }
 
     const handleSubmit = async () => {
@@ -93,22 +124,47 @@ const AddLesson = (props) => {
                 grade: props.grade
             };
 
-            const result = await lessonService.add(postData);
-            setAlertMessage('Đã thêm mới!');
+            const result = await lessonService.updateLesson(postData);
+            setAlertMessage('Đã thay đổi bài học!');
             setStatus('success');
             handleAlert();
+            closeDialog();
+            props.reLoadAPI();
         } catch (error) {
             console.log(error);
         }
     }
 
     useEffect(() => {
-        getAPISubjectList();
-    }, [])
+        console.log("ksdfjdd");
+        if (subjectList.length === 0) {
+            getAPISubjectList();
+        }
+        getClassInCharge();
+        if (props.lesson) {
+            setLesson(props.lesson)
+        }
+        if (props.lesson && subjectList.length > 0) {
+            // console.log(subjectList)
+            // console.log(props.lesson)
+            let index = -1;
+            subjectList.forEach((row, id) => {
+                if (row._id === props.lesson.subject) {
+                    index = id;
+                }
+            })
+            if (index !== -1) {
+                setSubjectSelect(index)
+            }
+        }
+    }, [props.lesson, subjectList])
 
-    return (<Box sx={{display: 'inline'}}>
-        <IconButton color="primary" onClick={() => setOpenAddLesson(true)}>
-            <IconSquarePlus />
+    return checkEdit() ? (<Box sx={{ display: 'inline' }}>
+        <IconButton
+            size='small'
+            color="primary"
+            onClick={() => setOpenAddLesson(true)}>
+            <IconEditCircle />
         </IconButton>
         <Dialog
             open={openAddLesson}
@@ -186,7 +242,7 @@ const AddLesson = (props) => {
             <DialogActions>
                 <Button onClick={() => setOpenAddLesson(false)}>Hủy</Button>
                 <Button autoFocus onClick={handleSubmit}>
-                    Thêm
+                    Lưu
                 </Button>
             </DialogActions>
         </Dialog>
@@ -198,7 +254,7 @@ const AddLesson = (props) => {
             </Snackbar>
         </Stack>
     </Box>
-    )
+    ) : <div></div>
 }
 
-export default AddLesson;
+export default EditLesson;

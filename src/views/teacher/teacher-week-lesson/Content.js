@@ -1,11 +1,20 @@
 
+import React from 'react'
 import { useTheme } from "@mui/material/styles"
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Typography, Button, IconButton, Stack, Snackbar } from "@mui/material";
 import Text from "ui-component/Text";
 import EditContent from "./EditContent";
 import moment from "moment";
 import { useState, useEffect, useRef } from 'react'
 import LessonService from "services/objects/lesson.service";
+import EditLesson from "./EditLesson";
+import { IconSquareX } from '@tabler/icons';
+import MuiAlert from '@mui/material/Alert';
+import DeleteLesson from './DeleteLesson';
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 // import ReactPlayer from 'react-player'
 
 function formatInputDate(dateString) {
@@ -30,6 +39,22 @@ const Content = (props) => {
         _id: '',
         text: ''
     });
+
+    const [alertMessage, setAlertMessage] = useState('Thêm thành công!');
+    const [status, setStatus] = useState('success');
+    const [open, setOpen] = useState(false);
+
+    const handleAlert = () => {
+        setOpen(true);
+    };
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpen(false);
+    };
+
     const divRender = useRef();
 
     const getAPI = async () => {
@@ -39,7 +64,6 @@ const Content = (props) => {
             if (data !== "") {
                 setLessonContent(data);
             } else {
-                console.log("Nodata")
                 setLessonContent({
                     _id: '',
                     text: '- - - - - - Chưa có nội dung - - - - - -'
@@ -74,10 +98,24 @@ const Content = (props) => {
         borderColor: theme.palette.primary.main,
         paddingLeft: "16px",
         display: "flex",
-        flexDirection: "column",
         justifyContent: "center",
         paddingBottom: "10px",
         paddingTop: "10px"
+    }
+
+    const handleDelete = async () => {
+        const bool = window.confirm('Bạn có muốn xóa lớp này không?');
+        if (bool) {
+            try {
+                const result = await lessonService.deleteLessonById(props.lesson._id)
+                setAlertMessage('Đã xóa thành công!');
+                setStatus('success');
+                props.getLessonList();
+                handleAlert();
+            } catch (error) {
+                console.log(error)
+            }
+        }
     }
 
     const convertHtml = (xmlString) => {
@@ -110,7 +148,25 @@ const Content = (props) => {
         <>
             <Box marginBottom={"16px"}>
                 <Box sx={topStyle}>
-                    <Typography sx={titleStyle} variant="h5">{props.lesson.title}</Typography>
+                    <Box sx={titleStyle}>
+                        <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                            <Typography sx={{ display: 'flex' }} variant="h4" align="justify">
+                                {props.lesson.title}
+                            </Typography>
+                        </Box>
+                        <EditLesson
+                            grade={props.grade}
+                            week={props.week}
+                            lesson={props.lesson}
+                            reLoadAPI={props.getLessonList}
+                        />
+                        <DeleteLesson
+                            grade={props.grade}
+                            week={props.week}
+                            reLoadAPI={props.getLessonList}
+                            lesson={props.lesson}
+                        />
+                    </Box>
                     <Typography variant="caption" paddingTop="8px">{
                         props.lesson.date ? formatInputDate(props.lesson.date) : formatInputDate('')
                     }</Typography>
@@ -126,6 +182,13 @@ const Content = (props) => {
                     <EditContent lesson={props.lesson} reLoad={getAPI} />
                 </Box>
             </Box>
+            <Stack spacing={2} sx={{ width: '100%' }}>
+                <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                    <Alert onClose={handleClose} severity={status} sx={{ width: '100%' }}>
+                        {alertMessage}
+                    </Alert>
+                </Snackbar>
+            </Stack>
         </>)
 }
 

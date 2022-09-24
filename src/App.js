@@ -7,7 +7,6 @@ import { CssBaseline, StyledEngineProvider } from '@mui/material';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-
 // routing
 import Routes from 'routes';
 

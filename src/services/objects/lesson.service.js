@@ -31,6 +31,16 @@ class LessonService extends BaseService {
         const result = await this.api.post('/lesson/get-lesson-content-by-lesson', { lessonID });
         return result;
     }
+
+    updateLesson = async (lesson) => {
+        const result = await this.api.post('/lesson/update-lesson', { lesson });
+        return result;
+    }
+
+    deleteLessonById = async (id) => {
+        const result = await this.api.post('/lesson/delete-by-id', { id });
+        return result
+    }
 }
 
 export default LessonService;
