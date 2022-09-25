@@ -19,7 +19,7 @@ import { useParams } from 'react-router-dom';
 const classService = new ClassService();
 const lessonService = new LessonService();
 
-const TeacherClass = () => {
+const TeacherWeekLesson = () => {
 
     const { classID } = useParams();
     const [loading, setLoading] = useState(true)
@@ -223,4 +223,4 @@ const TeacherClass = () => {
     )
 }
 
-export default TeacherClass;
+export default TeacherWeekLesson;
