@@ -1,13 +1,13 @@
 // assets
-import { IconWindow, IconCalendarTime } from '@tabler/icons';
+import { IconBook2, IconCalendarTime, IconBorderAll } from '@tabler/icons';
 // constant
-const icons = { IconWindow,IconCalendarTime  };
+const icons = { IconBook2,IconCalendarTime, IconBorderAll  };
 
 // ==============================|| DASHBOARD MENU ITEMS ||============================== //
 
 const dashboard = {
     id: 'dashboard',
-    title: 'Quản lý',
+    title: 'Giảng dạy',
     type: 'group',
     children: [
         {
@@ -20,10 +20,18 @@ const dashboard = {
         },
         {
             id: 'classroom',
-            title: 'Lớp học',
+            title: 'Lớp chủ nhiệm',
             type: 'item',
             url: '/teacher/class',
-            icon: icons.IconWindow,
+            icon: icons.IconBorderAll,
+            breadcrumbs: false
+        },
+        {
+            id: 'lesson',
+            title: 'Nội dung bài giảng',
+            type: 'item',
+            url: '/teacher/home',
+            icon: icons.IconBook2,
             breadcrumbs: false
         }
     ]

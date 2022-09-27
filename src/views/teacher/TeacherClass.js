@@ -13,8 +13,8 @@ import Content from './teacher-class/Content';
 import AddContent from './teacher-class/AddContent';
 import ClassService from 'services/objects/class.service';
 import LessonService from 'services/objects/lesson.service';
-import { useParams } from 'react-router-dom';
 import ClassContentService from 'services/objects/classContent.service';
+import LeftCard from './teacher-card/LeftCard';
 
 const classService = new ClassService();
 const lessonService = new LessonService();
@@ -22,20 +22,21 @@ const classContentService = new ClassContentService();
 
 const TeacherClass = () => {
 
-    const { classID } = useParams();
+    console.log('Teacher Class')
+
     const [loading, setLoading] = useState(true)
     const [classObject, setClassObject] = useState({
         _id: "",
-        grade: ""
+        grade: "",
+        name: ""
     });
-    // const [subjectLessonList, setSubjectLessonList] = useState([]);
-    // const [subjectSelect, setSubjectSelect] = useState(0);
     const [lessonList, setLessonList] = useState([]);
     const [classContents, setClassContents] = useState([])
 
     const getClass = async () => {
         try {
-            const result = await classService.getClassById(classID);
+            // const result = await classService.getClassById(classID);
+            const result = await classService.getHomeroomClassByTeacher();
             setClassObject(result.data);
         } catch (error) {
             console.log(error);
@@ -44,76 +45,31 @@ const TeacherClass = () => {
 
     const getClassContentList = async () => {
         try {
-            const result = await classContentService.getALL(classID);
+            const result = await classContentService.getALL(classObject._id);
             setClassContents(result.data)
         } catch (error) {
             console.log(error);
         }
     }
 
-    // const getLessonList = async () => {
-    //     if (week._id === "" ||
-    //         classObject.grade === "" ||
-    //         subjectLessonList.length === 0)
-    //         return;
-    //     else
-    //         try {
-    //             const result = await lessonService.getLessonsBySubjectWeekGrade(
-    //                 classObject.grade,
-    //                 week._id,
-    //                 subjectLessonList[subjectSelect]._id
-    //             )
-    //             if (result.data === "") {
-    //                 setLessonList([])
-    //             }
-    //             else {
-    //                 setLessonList(result.data)
-    //                 if (loading)
-    //                     setLoading(false)
-    //             }
-    //         } catch (error) {
-    //             console.log(error);
-    //         }
-    // }
-
-    // const getSubjectLessonList = async () => {
-    //     try {
-    //         const result = await lessonService.getSubjectInWeek(classObject.grade, week._id);
-    //         if (result.data === "") {
-    //             setSubjectLessonList([]);
-    //         } else {
-    //             setSubjectLessonList(result.data);
-    //         }
-    //         if (loading)
-    //             setLoading(false)
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // }
-
     useEffect(() => {
         if (classObject._id === "") {
             getClass();
+        } else {
+            getClassContentList();
         }
-        getClassContentList();
-        // if (week._id !== "" && classObject.grade !== "" && subjectLessonList.length === 0 && loading) {
-        //     getSubjectLessonList();
-        // }
-        // if (subjectLessonList.length > 0) {
-        //     getLessonList()
-        // }
-    }, [])
+    }, [classObject])
 
     return (
         <>
             <Grid container spacing={gridSpacing} >
                 <Grid item xs={12}>
                     <Grid container spacing={gridSpacing}>
-                        <Grid item lg={10} md={9} sm={12} xs={12}>
+                        <Grid item lg={9} md={9} sm={12} xs={12}>
                             <Grid container spacing={gridSpacing}>
-                                <Grid item sm={12} xs={12} md={12} lg={12}>
+                                {/* <Grid item sm={12} xs={12} md={12} lg={12}>
                                     <LabelCard isLoading={false} classroomName={classObject.name} />
-                                </Grid>
+                                </Grid> */}
                                 <Grid item sm={12} xs={12} md={12} lg={12}>
                                     <MainCard title={
                                         <Box sx={{
@@ -121,34 +77,13 @@ const TeacherClass = () => {
                                             justifyContent: "space-between",
                                             width: "100%"
                                         }}>
-                                            <Typography variant="h3">Lớp học</Typography>
+                                            <Typography variant="h3">Lớp {classObject.name}</Typography>
                                             <Box display={'flex'}>
+                                                {console.log("class: ", classObject._id)}
                                                 <AddContent
-                                                    classID={classID}
-                                                // grade={classObject.grade}
-                                                // getLessonList={getLessonList}
-                                                // getSubjectLessonList={getSubjectLessonList}
+                                                    classID={classObject._id}
+                                                    getAPI={getClassContentList}
                                                 />
-                                                {/*<FormControl>
-                                                    <Select
-                                                        labelId="mon"
-                                                        value={subjectSelect}
-                                                        size="small"
-                                                        onChange={(event) => setSubjectSelect(event.target.value)}
-                                                    >
-                                                        {
-                                                            subjectLessonList === []
-                                                                ?
-                                                                <MenuItem value={0}>Rỗng</MenuItem>
-                                                                :
-                                                                subjectLessonList.map((row, index) => {
-                                                                    return <MenuItem key={index} value={index}>
-                                                                        {row.name}
-                                                                    </MenuItem>
-                                                                })
-                                                        }
-                                                    </Select>
-                                                </FormControl> */}
                                             </Box>
                                         </Box>
                                     }>
@@ -158,16 +93,19 @@ const TeacherClass = () => {
                                                 <Content
                                                     key={index}
                                                     contentId={row._id}
-                                                    // grade={classObject.grade}
-                                                    // week={week}
-                                                    // getLessonList={getLessonList}
+                                                    reLoadAPI={getClassContentList}
                                                 />
                                             )}
                                     </MainCard>
                                 </Grid>
                             </Grid>
                         </Grid>
-                        <Grid item lg={2} md={3} sm={12} xs={12}>
+                        <Grid item lg={3} md={3} sm={12} xs={12}>
+                            <Grid container spacing={gridSpacing}>
+                                <Grid item sm={12} xs={12} md={12} lg={12}>
+                                    <LeftCard />
+                                </Grid>
+                            </Grid>
                         </Grid>
                     </Grid>
                 </Grid>

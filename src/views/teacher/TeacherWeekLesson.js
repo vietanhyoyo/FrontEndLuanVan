@@ -149,7 +149,7 @@ const TeacherWeekLesson = () => {
             <Grid container spacing={gridSpacing} >
                 <Grid item xs={12}>
                     <Grid container spacing={gridSpacing}>
-                        <Grid item lg={10} md={9} sm={12} xs={12}>
+                        <Grid item lg={9} md={9} sm={12} xs={12}>
                             <Grid container spacing={gridSpacing}>
                                 <Grid item sm={12} xs={12} md={12} lg={12}>
                                     <LabelCard isLoading={false} classroomName={classObject.name} />
@@ -207,7 +207,7 @@ const TeacherWeekLesson = () => {
                                 </Grid>
                             </Grid>
                         </Grid>
-                        <Grid item lg={2} md={3} sm={12} xs={12}>
+                        <Grid item lg={3} md={3} sm={12} xs={12}>
                             <WeekList
                                 changeWeek={changeWeek}
                                 getSubjectLessonList={(weekID) => {

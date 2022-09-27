@@ -11,7 +11,7 @@ class ClassContentService extends BaseService {
         const result = await this.api.post('/class-content/get-by-class', { classID });
         return result;
     }
-    
+
     getClassContent = async (id) => {
         const result = await this.api.post('/class-content/get-by-id', { id });
         return result;
@@ -19,6 +19,11 @@ class ClassContentService extends BaseService {
 
     update = async (content) => {
         const result = await this.api.post('/class-content/update-class-content', { content });
+        return result;
+    }
+
+    delete = async (id) => {
+        const result = await this.api.post('/class-content/delete-class-content', { id });
         return result;
     }
 

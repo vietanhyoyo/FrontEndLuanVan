@@ -3,6 +3,7 @@ import TeacherService from "services/objects/teacher.service";
 import { Box } from "@mui/material";
 import { Link } from 'react-router-dom'
 import { useEffect, useState } from "react";
+import SubjectCard from "./teacher-home/SubjectCard";
 
 const teacherService = new TeacherService();
 
@@ -43,8 +44,18 @@ const TeacherHome = () => {
             classList.length === 0 ? <div>Chưa tìm thấy</div> :
                 classList.map((row, index) => {
                     return <Box mb={3} key={index}>
-                        <Link to={`/teacher/class/${row._id}`}>
+                        <Link to={`/teacher/class`}>
                             <ClassCard isLoading={false} classInCharge={row} />
+                        </Link>
+                    </Box>
+                })
+        }
+        {
+            classList.length === 0 ? <div>Chưa tìm thấy</div> :
+                classList.map((row, index) => {
+                    return <Box mb={3} key={index}>
+                        <Link to={`/teacher/weeklesson/${row._id}`}>
+                            <SubjectCard isLoading={false} classInCharge={row} />
                         </Link>
                     </Box>
                 })

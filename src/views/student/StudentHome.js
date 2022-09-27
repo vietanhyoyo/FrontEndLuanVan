@@ -55,7 +55,7 @@ const StudentHome = () => {
                                 <Schedule />
                             </Grid>
                             <Grid item sm={12} xs={12} md={12} lg={12}>
-                                <MainCard title="Trang tin lớp học">
+                                <MainCard title="Trang chủ">
                                     <Content />
                                     <Content />
                                 </MainCard>

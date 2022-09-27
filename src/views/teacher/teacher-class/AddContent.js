@@ -14,6 +14,7 @@ import MuiAlert from '@mui/material/Alert';
 import ReactQuill from "react-quill";
 import ClassContentService from 'services/objects/classContent.service';
 import 'react-quill/dist/quill.snow.css'
+import { propsToClassKey } from '@mui/styles';
 
 const Alert = forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -43,6 +44,8 @@ const AddContent = (props) => {
         class: props.classID
     });
 
+    console.log("kàkljádf: ", props.classID);
+
     const [open, setOpen] = useState(false);
 
     const handleAlert = () => {
@@ -53,7 +56,6 @@ const AddContent = (props) => {
         if (reason === 'clickaway') {
             return;
         }
-
         setOpen(false);
     };
 
@@ -83,31 +85,23 @@ const AddContent = (props) => {
         if (!contentValidate()) return;
 
         try {
-            await classContentService.add(content);
-            setAlertMessage('Thêm thành công');
+            const data = {
+                ...content,
+                class: props.classID
+            }
+            const result = await classContentService.add(data);
+            console.log(result);
+            setAlertMessage('Thêm thành công!');
             setStatus('success');
             handleAlert();
+            props.getAPI();
+            setOpenAddLesson(false)
         } catch (error) {
             console.log(error);
+            setAlertMessage('Có lỗi khi thêm');
+            setStatus('error');
+            handleAlert();
         }
-        // try {
-        //     const postData = {
-        //         ...lesson,
-        //         subject: subjectList[subjectSelect]._id,
-        //         week: props.week._id,
-        //         grade: props.grade
-        //     };
-
-        //     const result = await lessonService.add(postData);
-        //     setAlertMessage('Đã thêm mới!');
-        //     setStatus('success');
-        //     handleAlert();
-        //     props.getLessonList();
-        //     props.getSubjectLessonList();
-        //     closeDialog();
-        // } catch (error) {
-        //     console.log(error);
-        // }
     }
 
     const closeDialog = () => {

@@ -1,13 +1,8 @@
 
 import React from 'react'
-import { useTheme } from "@mui/material/styles"
-import { Box, Typography, Button, IconButton, Stack, Snackbar } from "@mui/material";
-import Text from "ui-component/Text";
-import EditContent from "./EditContent";
-import moment from "moment";
-import { useState, useEffect, useRef } from 'react'
+import { Box, IconButton, Stack, Snackbar } from "@mui/material";
+import { useState, useEffect } from 'react'
 import LessonService from "services/objects/lesson.service";
-import EditLesson from "./EditLesson";
 import { IconSquareX } from '@tabler/icons';
 import MuiAlert from '@mui/material/Alert';
 import TeacherService from 'services/objects/teacher.service';
@@ -67,7 +62,7 @@ export default function DeleteLesson(props) {
     }
 
     const handleDelete = async () => {
-        const bool = window.confirm('Bạn có muốn xóa lớp này không?');
+        const bool = window.confirm('Bạn có muốn nội dung này không?');
         if (bool) {
             try {
                 const result = await lessonService.deleteLessonById(props.lesson._id)

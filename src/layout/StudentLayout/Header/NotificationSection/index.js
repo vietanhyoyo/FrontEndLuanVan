@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 // material-ui
-import { useTheme, styled } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import {
     Avatar,
     Box,
@@ -32,47 +32,25 @@ import NotificationList from './NotificationList';
 // assets
 import { IconBell } from '@tabler/icons';
 
-const AnimateCard = styled(MainCard)(({ theme }) => ({
-    animation: 'notificationAni 2s infinite linear',
-    cursor: 'pointer',
-    color: "#fff",
-    display: "flex",
-    '@keyframes notificationAni': {
-        '0%': {
-            backgroundColor: theme.palette.primary.main
-        },
-        '50%': {
-            backgroundColor: theme.palette.success.main
-        },
-        '100%': {
-            backgroundColor: theme.palette.primary.main
-        },
+// notification status options
+const status = [
+    {
+        value: 'all',
+        label: 'All Notification'
     },
-}));
-
-const ThreeDot = styled('div')({
-    display: "inline",
-    position: "absolute",
-    '&:after': {
-        content: '"..."',
-        animation: 'threeDot 1.5s infinite linear',
+    {
+        value: 'new',
+        label: 'New'
     },
-    '@keyframes threeDot': {
-        '0%': {
-            content: '""'
-        },
-        '25%': {
-            content: '"."'
-        },
-        '75%': {
-            content: '".."'
-        },
-        '100%': {
-            content: '"..."'
-        },
+    {
+        value: 'unread',
+        label: 'Unread'
     },
-})
-
+    {
+        value: 'other',
+        label: 'Other'
+    }
+];
 
 // ==============================|| NOTIFICATION ||============================== //
 
@@ -173,7 +151,7 @@ const NotificationSection = () => {
                                             <Grid container alignItems="center" justifyContent="space-between" sx={{ pt: 2, px: 2 }}>
                                                 <Grid item>
                                                     <Stack direction="row" spacing={2}>
-                                                        <Typography variant="subtitle1">Tất cả thông báo</Typography>
+                                                        <Typography variant="subtitle1">All Notification</Typography>
                                                         <Chip
                                                             size="small"
                                                             label="01"
@@ -186,7 +164,7 @@ const NotificationSection = () => {
                                                 </Grid>
                                                 <Grid item>
                                                     <Typography component={Link} to="#" variant="subtitle2" color="primary">
-                                                        Đánh dấu đã đọc
+                                                        Mark as all read
                                                     </Typography>
                                                 </Grid>
                                             </Grid>
@@ -198,12 +176,22 @@ const NotificationSection = () => {
                                                 <Grid container direction="column" spacing={2}>
                                                     <Grid item xs={12}>
                                                         <Box sx={{ px: 2, pt: 0.25 }}>
-                                                            <AnimateCard>
-                                                                <Typography display="inline">
-                                                                    Môn Tiếng Việt đang diễn ra
-                                                                </Typography>
-                                                                <ThreeDot />
-                                                            </AnimateCard>
+                                                            <TextField
+                                                                id="outlined-select-currency-native"
+                                                                select
+                                                                fullWidth
+                                                                value={value}
+                                                                onChange={handleChange}
+                                                                SelectProps={{
+                                                                    native: true
+                                                                }}
+                                                            >
+                                                                {status.map((option) => (
+                                                                    <option key={option.value} value={option.value}>
+                                                                        {option.label}
+                                                                    </option>
+                                                                ))}
+                                                            </TextField>
                                                         </Box>
                                                     </Grid>
                                                     <Grid item xs={12} p={0}>

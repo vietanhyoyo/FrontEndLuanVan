@@ -56,6 +56,16 @@ class ClassService extends BaseService {
         const result = await this.api.get(`/class/get-class-of-student`);
         return result;
     }
+
+    getClassObjectOfStudent = async () => {
+        const result = await this.api.get(`/class/get-class-object-of-student`);
+        return result;
+    }
+
+    getHomeroomClassByTeacher = async () => {
+        const result = await this.api.get(`/class/get-homeroom-class-by-teacher`);
+        return result;
+    }
 }
 
 export default ClassService;

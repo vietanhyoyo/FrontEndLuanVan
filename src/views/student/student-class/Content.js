@@ -9,8 +9,8 @@ import LessonService from "services/objects/lesson.service";
 import { IconSquareX } from '@tabler/icons';
 import MuiAlert from '@mui/material/Alert';
 import ClassContentService from 'services/objects/classContent.service';
-import EditContent from './EditContent';
-import DeleteContent from './DeleteContent';
+// import EditContent from './EditContent';
+// import DeleteContent from './DeleteContent';
 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -46,20 +46,20 @@ const Content = (props) => {
         _id: "",
         text: ""
     });
-    const [alertMessage, setAlertMessage] = useState('Thêm thành công!');
-    const [status, setStatus] = useState('success');
-    const [open, setOpen] = useState(false);
+    // const [alertMessage, setAlertMessage] = useState('Thêm thành công!');
+    // const [status, setStatus] = useState('success');
+    // const [open, setOpen] = useState(false);
 
-    const handleAlert = () => {
-        setOpen(true);
-    };
+    // const handleAlert = () => {
+    //     setOpen(true);
+    // };
 
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setOpen(false);
-    };
+    // const handleClose = (event, reason) => {
+    //     if (reason === 'clickaway') {
+    //         return;
+    //     }
+    //     setOpen(false);
+    // };
 
     const getAPI = async () => {
         try {
@@ -101,20 +101,20 @@ const Content = (props) => {
         paddingTop: "10px"
     }
 
-    const handleDelete = async () => {
-        const bool = window.confirm('Bạn có muốn xóa lớp này không?');
-        if (bool) {
-            try {
-                const result = await lessonService.deleteLessonById(props.lesson._id)
-                setAlertMessage('Đã xóa thành công!');
-                setStatus('success');
-                // props.getLessonList();
-                handleAlert();
-            } catch (error) {
-                console.log(error)
-            }
-        }
-    }
+    // const handleDelete = async () => {
+    //     const bool = window.confirm('Bạn có muốn xóa lớp này không?');
+    //     if (bool) {
+    //         try {
+    //             const result = await lessonService.deleteLessonById(props.lesson._id)
+    //             setAlertMessage('Đã xóa thành công!');
+    //             setStatus('success');
+    //             // props.getLessonList();
+    //             handleAlert();
+    //         } catch (error) {
+    //             console.log(error)
+    //         }
+    //     }
+    // }
 
     const convertHtml = (xmlString) => {
         if (!xmlString) return <div></div>
@@ -147,8 +147,8 @@ const Content = (props) => {
                                 {content.title}
                             </Typography>
                         </Box>
-                        <EditContent content={content} reLoad={getAPI} />
-                        <DeleteContent content={content} reLoad={props.reLoadAPI}/>
+                        {/* <EditContent content={content} reLoad={getAPI} />
+                        <DeleteContent content={content} reLoad={props.reLoadAPI}/> */}
                     </Box>
                     <Typography variant="caption" paddingTop="8px">{
                         content.date ? formatInputDate(content.date) : formatInputDate('')
@@ -159,13 +159,13 @@ const Content = (props) => {
                     {convertHtml(content.text)}
                 </Box>
             </Box>
-            <Stack spacing={2} sx={{ width: '100%' }}>
+            {/* <Stack spacing={2} sx={{ width: '100%' }}>
                 <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
                     <Alert onClose={handleClose} severity={status} sx={{ width: '100%' }}>
                         {alertMessage}
                     </Alert>
                 </Snackbar>
-            </Stack>
+            </Stack> */}
         </>)
 }
 

@@ -1,54 +1,26 @@
 // assets
 import {
-    IconTypography,
-    IconPalette,
-    IconShadow,
-    IconWindmill,
-    IconArtboard,
-    IconBook,
-    IconSchool
+    IconLink
 } from '@tabler/icons';
 
 // constant
 const icons = {
-    IconTypography,
-    IconPalette,
-    IconShadow,
-    IconWindmill,
-    IconArtboard,
-    IconBook,
-    IconSchool
+    IconLink
 };
 
 // ==============================|| UTILITIES MENU ITEMS ||============================== //
 
 const accounts = {
     id: 'accounts',
-    title: 'Tài khoản',
+    title: 'Thiết lập',
     type: 'group',
     children: [
         {
             id: 'manageradmin',
-            title: 'Quản trị',
+            title: 'Quản lý đường link',
             type: 'item',
-            url: '/manager/admin',
-            icon: icons.IconArtboard,
-            breadcrumbs: false
-        },
-        {
-            id: 'managerteacher',
-            title: 'Giáo viên',
-            type: 'item',
-            url: '/manager/teacher',
-            icon: icons.IconBook,
-            breadcrumbs: false
-        },
-        {
-            id: 'managerstudent',
-            title: 'Học sinh',
-            type: 'item',
-            url: '/manager/student',
-            icon: icons.IconSchool,
+            url: '/teacher/linkedit',
+            icon: icons.IconLink,
             breadcrumbs: false
         }
     ]

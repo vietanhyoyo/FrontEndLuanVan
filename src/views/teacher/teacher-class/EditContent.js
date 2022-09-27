@@ -5,26 +5,66 @@ import {
 } from '@mui/material';
 import ReactQuill from "react-quill";
 import { IconEditCircle } from '@tabler/icons';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, forwardRef } from 'react';
 import ClassContentService from 'services/objects/classContent.service';
+import MuiAlert from '@mui/material/Alert';
+
+const Alert = forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const classContentService = new ClassContentService();
 
 const EditContent = (props) => {
 
-    const [openEdit, setEdit] = useState(false);
+    const [openEdit, setOpenEdit] = useState(false);
     const [content, setContent] = useState({});
-
+    const [status, setStatus] = useState('success');
+    const [alertMessage, setAlertMessage] = useState('Thêm thành công!');
     const closeDialog = () => {
-        setEdit(false)
+        setOpenEdit(false)
+    }
+
+    const [open, setOpen] = useState(false);
+
+    const handleAlert = () => {
+        setOpen(true);
+    };
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpen(false);
+    };
+
+    const contentValidate = () => {
+        if (content.title.length === 0) {
+            setAlertMessage('Chưa nhập tiêu đề!');
+            setStatus('error');
+            handleAlert();
+            return false;
+        }
+        return true;
     }
 
     const handleSubmit = async () => {
+
+        if (!contentValidate()) return;
+
         try {
             const result = await classContentService.update(content);
             console.log(result);
+            setAlertMessage('Chỉnh sửa thành công!');
+            setStatus('success');
+            handleAlert();
+            setOpenEdit(false);
+            props.reLoad();
         } catch (error) {
             console.log(error);
+            setAlertMessage('Thất bại!');
+            setStatus('error');
+            handleAlert();
         }
     }
 
@@ -36,7 +76,7 @@ const EditContent = (props) => {
         <IconButton
             size='small'
             color="primary"
-            onClick={() => setEdit(true)}
+            onClick={() => setOpenEdit(true)}
         >
             <IconEditCircle />
         </IconButton>
@@ -84,6 +124,13 @@ const EditContent = (props) => {
                 </Button>
             </DialogActions>
         </Dialog>
+        <Stack spacing={2} sx={{ width: '100%' }}>
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity={status} sx={{ width: '100%' }}>
+                    {alertMessage}
+                </Alert>
+            </Snackbar>
+        </Stack>
     </>
 }
 const modules = {

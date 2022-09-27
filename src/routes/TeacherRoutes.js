@@ -14,6 +14,7 @@ const TeacherRoute = Loadable(lazy(() => import('views/teacher/TeacherRoute')))
 const SubjectTeacherClass = Loadable(lazy(() => import('views/teacher/SubjectTeacherClass')))
 const TeacherClass = Loadable(lazy(() => import('views/teacher/TeacherClass')))
 const TeacherHome = Loadable(lazy(() => import('views/teacher/TeacherHome')))
+const LinkEdit = Loadable(lazy(() => import('views/teacher/LinkEdit')))
 // ==============================|| MAIN ROUTING ||============================== //
 
 const TeacherRoutes = {
@@ -37,12 +38,16 @@ const TeacherRoutes = {
             element: <SubjectTeacherClass />
         },
         {
-            path: '/teacher/class/:classID',
+            path: '/teacher/class',
             element: <TeacherClass />
         },
         {
             path: '/teacher/home',
             element: <TeacherHome />
+        },
+        {
+            path: '/teacher/linkedit',
+            element: <LinkEdit />
         }
     ]
 };

@@ -13,14 +13,13 @@ import WeekList from './student-lesson/WeekList'
 import ContentLesson from './student-lesson/ContentLesson';
 import ClassService from 'services/objects/class.service';
 import LessonService from 'services/objects/lesson.service';
-import { useParams } from 'react-router-dom';
 
 const classService = new ClassService();
 const lessonService = new LessonService();
 
 const StudentLesson = () => {
 
-    const { classID } = useParams();
+    // const [classID, setClassID]  = useState("");
     const [loading, setLoading] = useState(true)
     const [week, setWeek] = useState({
         _id: "",
@@ -40,7 +39,7 @@ const StudentLesson = () => {
 
     const getClass = async () => {
         try {
-            const result = await classService.getClassById(classID);
+            const result = await classService.getClassObjectOfStudent();
             setClassObject(result.data);
         } catch (error) {
             console.log(error);
@@ -121,9 +120,9 @@ const StudentLesson = () => {
     return (
         <>
             <Grid container spacing={gridSpacing} sx={{ display: "flex", justifyContent: "center" }} >
-                <Grid item xs={10}>
+                <Grid item xs={12}>
                     <Grid container spacing={gridSpacing}>
-                        <Grid item lg={10} md={9} sm={12} xs={12}>
+                        <Grid item lg={9} md={9} sm={12} xs={12}>
                             <Grid container spacing={gridSpacing}>
                                 <Grid item sm={12} xs={12} md={12} lg={12}>
                                     <LabelCard isLoading={false} classroomName={classObject.name} />
@@ -176,7 +175,7 @@ const StudentLesson = () => {
                                 </Grid>
                             </Grid>
                         </Grid>
-                        <Grid item lg={2} md={3} sm={12} xs={12}>
+                        <Grid item lg={3} md={3} sm={12} xs={12}>
                             <WeekList
                                 changeWeek={changeWeek}
                                 getSubjectLessonList={(weekID) => {

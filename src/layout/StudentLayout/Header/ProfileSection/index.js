@@ -159,12 +159,12 @@ const ProfileSection = () => {
                                     <Box sx={{ p: 2 }}>
                                         <Stack>
                                             <Stack direction="row" spacing={0.5} alignItems="center">
-                                                <Typography variant="h4">Xin chào,</Typography>
+                                                <Typography variant="h4">Good Morning,</Typography>
                                                 <Typography component="span" variant="h4" sx={{ fontWeight: 400 }}>
-                                                    Việt Anh
+                                                    Johne Doe
                                                 </Typography>
                                             </Stack>
-                                            <Typography variant="subtitle2">Rất vui được phục vụ bạn</Typography>
+                                            <Typography variant="subtitle2">Project Admin</Typography>
                                         </Stack>
                                     </Box>
                                     <PerfectScrollbar style={{ height: '100%', maxHeight: 'calc(100vh - 250px)', overflowX: 'hidden' }}>
@@ -194,12 +194,12 @@ const ProfileSection = () => {
                                                     <ListItemIcon>
                                                         <IconSettings stroke={1.5} size="1.3rem" />
                                                     </ListItemIcon>
-                                                    <ListItemText primary={<Typography variant="body2">Account Settings</Typography>} />
+                                                    <ListItemText primary={<Typography variant="body2">Cài đặt</Typography>} />
                                                 </ListItemButton>
                                                 <ListItemButton
                                                     sx={{ borderRadius: `${customization.borderRadius}px` }}
                                                     selected={selectedIndex === 1}
-                                                    onClick={(event) => handleListItemClick(event, 1, '/student/profile')}
+                                                    onClick={(event) => handleListItemClick(event, 1, '/manager/profile')}
                                                 >
                                                     <ListItemIcon>
                                                         <IconUser stroke={1.5} size="1.3rem" />
@@ -208,7 +208,7 @@ const ProfileSection = () => {
                                                         primary={
                                                             <Grid container spacing={1} justifyContent="space-between">
                                                                 <Grid item>
-                                                                    <Typography variant="body2">Thông tin các nhân</Typography>
+                                                                    <Typography variant="body2">Cá nhân</Typography>
                                                                 </Grid>
                                                                 <Grid item>
                                                                     <Chip

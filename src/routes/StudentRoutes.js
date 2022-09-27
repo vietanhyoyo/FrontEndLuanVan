@@ -9,6 +9,7 @@ import PrivateRoute from 'components/PrivateRoute';
 const StudentHome = Loadable(lazy(() => import('views/student/StudentHome')));
 const StudentProfile = Loadable(lazy(() => import('views/student/StudentProfile')));
 const StudentLesson = Loadable(lazy(() => import('views/student/StudentLesson')));
+const StudentClass = Loadable(lazy(() => import('views/student/StudentClass')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -25,8 +26,12 @@ const StudentRoutes = {
             element: <StudentProfile />
         },
         {
-            path: '/student/lesson/:classID',
+            path: '/student/lesson',
             element: <StudentLesson />
+        },
+        {
+            path: '/student/class',
+            element: <StudentClass />
         }
     ]
 };

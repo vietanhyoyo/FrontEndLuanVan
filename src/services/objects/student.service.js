@@ -27,6 +27,11 @@ class StudentService extends BaseService {
         return result;
     }
 
+    getStudentInformation = async () => {
+        const result = await this.api.get('/student/get-information');
+        return result;
+    }
+
 }
 
 export default StudentService;
