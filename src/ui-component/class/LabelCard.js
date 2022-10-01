@@ -105,9 +105,11 @@ const LabelCard = ({ isLoading, classroomName }) => {
                                 anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
                                 variant="dot"
                             >
-                                <AnimateText>
-                                    Môn Toán đang diễn ra ...
-                                </AnimateText>
+                                <a href='https://meet.google.com/tcq-nhir-zyg' target="_blank">
+                                    <AnimateText>
+                                        Môn Toán đang diễn ra ...
+                                    </AnimateText>
+                                </a>
                             </StyledBadge>
                         </List>
                     </Box>

@@ -1,13 +1,21 @@
 // assets
-import { IconBorderAll, IconBook2 } from '@tabler/icons';
+import { IconBorderAll, IconBook2, IconCalendarTime } from '@tabler/icons';
 // constant
-const icons = { IconBorderAll, IconBook2 };
+const icons = { IconBorderAll, IconBook2, IconCalendarTime };
 
 const dashboard = {
     id: 'dashboard',
     title: 'Góc học tập',
     type: 'group',
     children: [
+        {
+            id: 'default',
+            title: 'Thời khóa biểu',
+            type: 'item',
+            url: '/teacher/classCalendar',
+            icon: icons.IconCalendarTime,
+            breadcrumbs: false
+        },
         {
             id: 'default',
             title: 'Nội dung môn học',

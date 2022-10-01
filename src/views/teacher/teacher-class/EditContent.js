@@ -120,7 +120,7 @@ const EditContent = (props) => {
             <DialogActions>
                 <Button onClick={closeDialog}>Hủy</Button>
                 <Button autoFocus onClick={handleSubmit}>
-                    Thêm
+                    Lưu
                 </Button>
             </DialogActions>
         </Dialog>

@@ -77,11 +77,7 @@ const ClassCard = ({ isLoading, classInCharge }) => {
                         <List sx={{ py: 0 }}>
                             <ListItem alignItems="center" disableGutters sx={{ py: 0 }}>
                                 <ListItemText
-                                    sx={{
-                                        py: 0,
-                                        mt: 0.45,
-                                        mb: 0.45
-                                    }}
+                                    sx={{ py: 0, mt: 0.45, mb: 0.45 }}
                                     primary={<Typography variant="h2">Lớp {classInCharge.name}</Typography>}
                                     secondary={
                                         <Typography

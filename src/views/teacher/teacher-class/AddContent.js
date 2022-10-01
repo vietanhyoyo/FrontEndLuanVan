@@ -44,8 +44,6 @@ const AddContent = (props) => {
         class: props.classID
     });
 
-    console.log("kàkljádf: ", props.classID);
-
     const [open, setOpen] = useState(false);
 
     const handleAlert = () => {
@@ -90,7 +88,6 @@ const AddContent = (props) => {
                 class: props.classID
             }
             const result = await classContentService.add(data);
-            console.log(result);
             setAlertMessage('Thêm thành công!');
             setStatus('success');
             handleAlert();

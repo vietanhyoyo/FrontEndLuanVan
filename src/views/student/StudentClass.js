@@ -15,6 +15,7 @@ import { useState, useEffect } from 'react';
 import StudentService from 'services/objects/student.service';
 import ClassContentService from 'services/objects/classContent.service';
 import LeftCard from './student-card/LeftCard';
+import InforCard from './student-card/InforCard';
 
 // ==============================|| SAMPLE PAGE ||============================== //
 
@@ -68,7 +69,7 @@ const StudentClass = () => {
         <Grid container spacing={gridSpacing} >
             <Grid item xs={12}>
                 <Grid container spacing={gridSpacing} display='flex' justifyContent='center'>
-                    <Grid item lg={9} md={9} sm={12} xs={12}>
+                    <Grid item lg={8} md={8} sm={12} xs={12}>
                         <Grid container spacing={gridSpacing}>
                             <Grid item sm={12} xs={12} md={12} lg={12}>
                                 <MainCard title={
@@ -93,10 +94,13 @@ const StudentClass = () => {
                             </Grid>
                         </Grid>
                     </Grid>
-                    <Grid item lg={3} md={3} sm={12} xs={12}>
+                    <Grid item lg={4} md={4} sm={12} xs={12}>
                         <Grid container spacing={gridSpacing}>
                             <Grid item sm={12} xs={12} md={12} lg={12}>
                                 <LeftCard />
+                            </Grid>
+                            <Grid item sm={12} xs={12} md={12} lg={12}>
+                                <InforCard />
                             </Grid>
                         </Grid>
                     </Grid>

@@ -11,6 +11,7 @@ import { store } from 'store';
 
 // style + assets
 import 'assets/scss/style.scss';
+import 'assets/scss/student.scss'
 
 require('dotenv').config();
 // ==============================|| REACT DOM RENDER  ||============================== //

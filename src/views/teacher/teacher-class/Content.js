@@ -143,12 +143,16 @@ const Content = (props) => {
                 <Box sx={topStyle}>
                     <Box sx={titleStyle}>
                         <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                            <Typography sx={{ display: 'flex' }} variant="h4" align="justify">
+                            <Typography
+                                sx={{ display: 'block', width: "max-content" }}
+                                variant="h4"
+                                align="justify"
+                            >
                                 {content.title}
                             </Typography>
                         </Box>
                         <EditContent content={content} reLoad={getAPI} />
-                        <DeleteContent content={content} reLoad={props.reLoadAPI}/>
+                        <DeleteContent content={content} reLoad={props.reLoadAPI} />
                     </Box>
                     <Typography variant="caption" paddingTop="8px">{
                         content.date ? formatInputDate(content.date) : formatInputDate('')

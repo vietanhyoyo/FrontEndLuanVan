@@ -6,7 +6,9 @@ import {
     IconWindmill,
     IconArtboard,
     IconBook,
-    IconSchool
+    IconSchool,
+    IconId,
+    IconKey
 } from '@tabler/icons';
 
 // constant
@@ -17,7 +19,9 @@ const icons = {
     IconWindmill,
     IconArtboard,
     IconBook,
-    IconSchool
+    IconSchool,
+    IconId,
+    IconKey
 };
 
 // ==============================|| UTILITIES MENU ITEMS ||============================== //
@@ -29,26 +33,18 @@ const accounts = {
     children: [
         {
             id: 'manageradmin',
-            title: 'Quản trị',
+            title: 'Thông tin cá nhân',
             type: 'item',
-            url: '/manager/admin',
-            icon: icons.IconArtboard,
+            url: '/student/profile',
+            icon: icons.IconId,
             breadcrumbs: false
         },
         {
             id: 'managerteacher',
-            title: 'Giáo viên',
+            title: 'Đổi mật khẩu',
             type: 'item',
-            url: '/manager/teacher',
-            icon: icons.IconBook,
-            breadcrumbs: false
-        },
-        {
-            id: 'managerstudent',
-            title: 'Học sinh',
-            type: 'item',
-            url: '/manager/student',
-            icon: icons.IconSchool,
+            url: '/student/profile',
+            icon: icons.IconKey,
             breadcrumbs: false
         }
     ]

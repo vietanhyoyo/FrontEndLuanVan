@@ -18,8 +18,9 @@ import {
 } from '@mui/material';
 
 // assets
-import { IconBrandTelegram, IconBuildingStore, IconMailbox, IconPhoto } from '@tabler/icons';
+import { IconBrandTelegram, IconBuildingStore, IconMailbox, IconPhoto, IconBrandZoom } from '@tabler/icons';
 import User1 from 'assets/images/users/user-round.svg';
+import { Link } from 'react-router-dom';
 
 // styles
 const ListItemWrapper = styled('div')(({ theme }) => ({
@@ -31,6 +32,24 @@ const ListItemWrapper = styled('div')(({ theme }) => ({
     '& .MuiListItem-root': {
         padding: 0
     }
+}));
+
+const AnimateButton = styled(Button)(({ theme }) => ({
+    animation: 'livebutton 3s infinite linear',
+    '@keyframes livebutton': {
+        '0%': {
+            backgroundColor: theme.palette.primary.dark
+        },
+        '25%': {
+            backgroundColor: theme.palette.orange.dark
+        },
+        '75%': {
+            backgroundColor: theme.palette.success.main
+        },
+        '100%': {
+            backgroundColor: theme.palette.primary.dark
+        },
+    },
 }));
 
 // ==============================|| NOTIFICATION LIST ITEM ||============================== //
@@ -84,6 +103,49 @@ const NotificationList = () => {
             }}
         >
             <ListItemWrapper>
+                <ListItem alignItems="center">
+                    <ListItemAvatar>
+                        <Avatar
+                            sx={{
+                                color: theme.palette.primary.dark,
+                                backgroundColor: theme.palette.primary.light,
+                                border: 'none',
+                                borderColor: theme.palette.primary.main
+                            }}
+                        >
+                            <IconBrandZoom stroke={1.5} size="1.3rem" />
+                        </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText primary={<Typography variant="subtitle1">Đang diễn ra.</Typography>} />
+                    <ListItemSecondaryAction>
+                        <Grid container justifyContent="flex-end">
+                            <Grid item>
+                                <Typography variant="caption" display="block" gutterBottom>
+                                    1 giờ trước đó
+                                </Typography>
+                            </Grid>
+                        </Grid>
+                    </ListItemSecondaryAction>
+                </ListItem>
+                <Grid container direction="column" className="list-container">
+                    <Grid item xs={12} sx={{ pb: 2 }}>
+                        <Typography variant="subtitle2">Hiện tại có một lớp học online đang diễn ra!</Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Grid container>
+                            <Grid item>
+                                <a href="https://meet.google.com/fbm-pwye-zpm" target="_blank">
+                                    <AnimateButton variant="contained" disableElevation>
+                                        Tham gia lớp học
+                                    </AnimateButton>
+                                </a>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </ListItemWrapper>
+            <Divider />
+            {/* <ListItemWrapper>
                 <ListItem alignItems="center">
                     <ListItemAvatar>
                         <Avatar alt="John Doe" src={User1} />
@@ -274,7 +336,7 @@ const NotificationList = () => {
                         </Grid>
                     </Grid>
                 </Grid>
-            </ListItemWrapper>
+            </ListItemWrapper> */}
         </List>
     );
 };

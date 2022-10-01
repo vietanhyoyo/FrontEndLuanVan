@@ -179,7 +179,7 @@ const Content = (props) => {
                     </Text>
                     <div ref={divRender}></div>
                     {convertHtml(lessonContent.text)}
-                    <EditContent lesson={props.lesson} reLoad={getAPI} />
+                    <EditContent lesson={props.lesson} reLoad={getAPI} grade={props.grade} />
                 </Box>
             </Box>
             <Stack spacing={2} sx={{ width: '100%' }}>

@@ -22,8 +22,6 @@ const classContentService = new ClassContentService();
 
 const TeacherClass = () => {
 
-    console.log('Teacher Class')
-
     const [loading, setLoading] = useState(true)
     const [classObject, setClassObject] = useState({
         _id: "",
@@ -65,7 +63,7 @@ const TeacherClass = () => {
             <Grid container spacing={gridSpacing} >
                 <Grid item xs={12}>
                     <Grid container spacing={gridSpacing}>
-                        <Grid item lg={9} md={9} sm={12} xs={12}>
+                        <Grid item lg={8} md={8} sm={12} xs={12}>
                             <Grid container spacing={gridSpacing}>
                                 {/* <Grid item sm={12} xs={12} md={12} lg={12}>
                                     <LabelCard isLoading={false} classroomName={classObject.name} />
@@ -100,7 +98,7 @@ const TeacherClass = () => {
                                 </Grid>
                             </Grid>
                         </Grid>
-                        <Grid item lg={3} md={3} sm={12} xs={12}>
+                        <Grid item lg={4} md={4} sm={12} xs={12}>
                             <Grid container spacing={gridSpacing}>
                                 <Grid item sm={12} xs={12} md={12} lg={12}>
                                     <LeftCard />

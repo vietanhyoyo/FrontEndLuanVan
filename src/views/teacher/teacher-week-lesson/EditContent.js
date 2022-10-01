@@ -15,6 +15,8 @@ import LessonService from 'services/objects/lesson.service';
 import EditLink from './EditLink';
 import ReactQuill from "react-quill"
 import 'react-quill/dist/quill.snow.css'
+import SubjectService from 'services/objects/subject.service';
+import TeacherService from 'services/objects/teacher.service';
 
 // import 'draft-js/dist/Draft.css';
 
@@ -23,10 +25,14 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 const lessonService = new LessonService();
+const subjectService = new SubjectService();
+const teacherService = new TeacherService();
 
 const EditContent = (props) => {
     const [text, setText] = useState("");
     const [open, setOpen] = React.useState(false);
+    const [subjectList, setSubjectList] = useState([]);
+    const [gradeList, setGradeList] = useState([]);
     const [editorState, setEditorState] = React.useState(
         () => EditorState.createEmpty(),
     );
@@ -62,11 +68,52 @@ const EditContent = (props) => {
         }
     }
 
+    const getClassInCharge = async () => {
+        try {
+            const result = await teacherService.getClassInCharge();
+            if (result.status === 200) {
+                const docs = result.data;
+                if (docs.classInCharge !== []) {
+                    const array = docs.classInCharge.map(row => row.grade)
+                    setGradeList(array)
+                }
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const checkEdit = () => {
+        if (gradeList.length === 0) return false;
+        const bool1 = gradeList.includes(props.grade);
+        let bool2 = true;
+        if (props.lesson) {
+            const idSubjectArray = subjectList.map(row => row._id);
+            bool2 = idSubjectArray.includes(props.lesson.subject);
+        }
+        return bool1 & bool2;
+    }
+
+    const getAPISubjectList = async () => {
+        try {
+            const result = await subjectService.getSubjectsByTeacher();
+            const docs = result.data;
+            // console.log(result)
+            setSubjectList(docs);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     React.useEffect(() => {
         getAPI();
+        getClassInCharge();
+        if (subjectList.length === 0) {
+            getAPISubjectList();
+        }
     },[open])
 
-    return (<>
+    return checkEdit() ? (<>
         <div>
             <Button
                 startIcon={<IconPlus />}
@@ -128,7 +175,7 @@ const EditContent = (props) => {
             </Dialog>
         </div>
     </>
-    )
+    ) : <div></div>
 
 }
 

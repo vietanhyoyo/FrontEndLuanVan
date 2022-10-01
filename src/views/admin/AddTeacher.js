@@ -60,6 +60,7 @@ const AddTeacher = () => {
         username: "",
         password: "",
         ethnic: "",
+        sex: 1,
         birthday: null,
         identityCard: "",
         homeTown: "",
@@ -101,6 +102,7 @@ const AddTeacher = () => {
     };
 
     const addTeacher = async () => {
+        console.log(newTeacher);
         if (
             newTeacher.name === "" ||
             newTeacher.username === "" ||
@@ -119,7 +121,8 @@ const AddTeacher = () => {
         try {
             const data = {
                 ...newTeacher,
-                homeroomClass: newTeacher.homeroomTeacher ? classList[selectClass]._id : null
+                homeroomClass: newTeacher.homeroomTeacher ? classList[selectClass]._id : null,
+                sex: newTeacher.sex === 1 ? "name" : "nữ"
             }
             const result = await teacherService.add(data);
             console.log(result)
@@ -283,6 +286,35 @@ const AddTeacher = () => {
                                     ethnic: event.target.value
                                 }))}
                                 inputProps={offAutoComplete} />
+                            <FormControl variant="standard" sx={{ minWidth: 120 }}>
+                                <InputLabel>Giới tính</InputLabel>
+                                <Select
+                                    value={newTeacher.sex}
+                                    label="Giới tính"
+                                    onChange={e => setNewTeacher(prev => ({
+                                        ...prev,
+                                        sex: e.target.value
+                                    }))}
+                                    sx={inputStyle}
+                                >
+                                    <MenuItem value={1}>nam</MenuItem>
+                                    <MenuItem value={2}>nữ</MenuItem>
+                                </Select>
+                            </FormControl>
+                            <TextField
+                                id="date"
+                                required
+                                label="Ngày sinh"
+                                variant="standard"
+                                type="date"
+                                sx={inputStyle}
+                                InputLabelProps={{ shrink: true, }}
+                                value={newTeacher.birthday ? formatInputDate(newTeacher.birthday) : formatInputDate('')}
+                                onChange={(event) => setNewTeacher(prev => ({
+                                    ...prev,
+                                    birthday: event.target.value
+                                }))}
+                            />
                             <TextField label="Số điện thoại"
                                 required
                                 variant="standard"
@@ -301,6 +333,8 @@ const AddTeacher = () => {
                                 onFocus={() => setWarning(prev => ({ ...prev, phone: null }))}
                                 sx={inputStyle}
                                 inputProps={offAutoComplete} />
+                        </Box>
+                        <Box mt={2}>
                             <TextField label="Email"
                                 required
                                 type="email"
@@ -320,8 +354,6 @@ const AddTeacher = () => {
                                 variant="standard"
                                 sx={inputStyle}
                                 inputProps={offAutoComplete} />
-                        </Box>
-                        <Box mt={2}>
                             <TextField label="Số CMND/CCCD"
                                 required
                                 variant="standard"
@@ -358,20 +390,6 @@ const AddTeacher = () => {
                                 onFocus={() => setWarning(prev => ({ ...prev, socialInsurance: null }))}
                                 sx={inputStyle}
                                 inputProps={offAutoComplete} />
-                            <TextField
-                                id="date"
-                                required
-                                label="Ngày sinh"
-                                variant="standard"
-                                type="date"
-                                sx={inputStyle}
-                                InputLabelProps={{ shrink: true, }}
-                                value={newTeacher.birthday ? formatInputDate(newTeacher.birthday) : formatInputDate('')}
-                                onChange={(event) => setNewTeacher(prev => ({
-                                    ...prev,
-                                    birthday: event.target.value
-                                }))}
-                            />
                         </Box>
                     </CardContent>
                     <CardContent>

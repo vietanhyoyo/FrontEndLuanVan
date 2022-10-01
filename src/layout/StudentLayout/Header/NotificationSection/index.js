@@ -18,7 +18,8 @@ import {
     Stack,
     TextField,
     Typography,
-    useMediaQuery
+    useMediaQuery,
+    Badge
 } from '@mui/material';
 
 // third-party
@@ -100,27 +101,35 @@ const NotificationSection = () => {
                 }}
             >
                 <ButtonBase sx={{ borderRadius: '12px' }}>
-                    <Avatar
-                        variant="rounded"
-                        sx={{
-                            ...theme.typography.commonAvatar,
-                            ...theme.typography.mediumAvatar,
-                            transition: 'all .2s ease-in-out',
-                            background: theme.palette.secondary.light,
-                            color: theme.palette.secondary.dark,
-                            '&[aria-controls="menu-list-grow"],&:hover': {
-                                background: theme.palette.secondary.dark,
-                                color: theme.palette.secondary.light
-                            }
+                    <Badge
+                        anchorOrigin={{
+                            vertical: 'top',
+                            horizontal: 'left',
                         }}
-                        ref={anchorRef}
-                        aria-controls={open ? 'menu-list-grow' : undefined}
-                        aria-haspopup="true"
-                        onClick={handleToggle}
-                        color="inherit"
-                    >
-                        <IconBell stroke={1.5} size="1.3rem" />
-                    </Avatar>
+                        badgeContent={4}
+                        color="secondary">
+                        <Avatar
+                            variant="rounded"
+                            sx={{
+                                ...theme.typography.commonAvatar,
+                                ...theme.typography.mediumAvatar,
+                                transition: 'all .2s ease-in-out',
+                                background: theme.palette.grey[200],
+                                color: theme.palette.primary.main,
+                                '&[aria-controls="menu-list-grow"],&:hover': {
+                                    background: theme.palette.primary.dark,
+                                    color: theme.palette.primary.light
+                                }
+                            }}
+                            ref={anchorRef}
+                            aria-controls={open ? 'menu-list-grow' : undefined}
+                            aria-haspopup="true"
+                            onClick={handleToggle}
+                            color="inherit"
+                        >
+                            <IconBell stroke={1.5} size="1.3rem" />
+                        </Avatar>
+                    </Badge>
                 </ButtonBase>
             </Box>
             <Popper
@@ -151,7 +160,7 @@ const NotificationSection = () => {
                                             <Grid container alignItems="center" justifyContent="space-between" sx={{ pt: 2, px: 2 }}>
                                                 <Grid item>
                                                     <Stack direction="row" spacing={2}>
-                                                        <Typography variant="subtitle1">All Notification</Typography>
+                                                        <Typography variant="subtitle1">Thông báo</Typography>
                                                         <Chip
                                                             size="small"
                                                             label="01"
@@ -164,7 +173,7 @@ const NotificationSection = () => {
                                                 </Grid>
                                                 <Grid item>
                                                     <Typography component={Link} to="#" variant="subtitle2" color="primary">
-                                                        Mark as all read
+                                                        Đánh dấu đã đọc
                                                     </Typography>
                                                 </Grid>
                                             </Grid>
@@ -174,7 +183,7 @@ const NotificationSection = () => {
                                                 style={{ height: '100%', maxHeight: 'calc(100vh - 205px)', overflowX: 'hidden' }}
                                             >
                                                 <Grid container direction="column" spacing={2}>
-                                                    <Grid item xs={12}>
+                                                    {/* <Grid item xs={12}>
                                                         <Box sx={{ px: 2, pt: 0.25 }}>
                                                             <TextField
                                                                 id="outlined-select-currency-native"
@@ -193,7 +202,7 @@ const NotificationSection = () => {
                                                                 ))}
                                                             </TextField>
                                                         </Box>
-                                                    </Grid>
+                                                    </Grid> */}
                                                     <Grid item xs={12} p={0}>
                                                         <Divider sx={{ my: 0 }} />
                                                     </Grid>
@@ -205,7 +214,7 @@ const NotificationSection = () => {
                                     <Divider />
                                     <CardActions sx={{ p: 1.25, justifyContent: 'center' }}>
                                         <Button size="small" disableElevation>
-                                            View All
+                                            Xem thêm
                                         </Button>
                                     </CardActions>
                                 </MainCard>
