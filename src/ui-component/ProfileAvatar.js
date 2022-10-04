@@ -31,6 +31,7 @@ const ProfileAvatar = () => {
                     Tải ảnh lên
                 </Button>
             </label>
+            <input accept="video/mp4" type="file" />
         </Box >
     )
 }

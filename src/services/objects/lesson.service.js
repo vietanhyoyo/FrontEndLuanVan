@@ -22,8 +22,8 @@ class LessonService extends BaseService {
         return result;
     }
 
-    addLessonContent = async (text, lessonID) => {
-        const result = await this.api.post('/lesson/add-lesson-content', { text, lessonID });
+    addLessonContent = async (text, lessonID, videoPath) => {
+        const result = await this.api.post('/lesson/add-lesson-content', { text, lessonID, videoPath });
         return result;
     }
 

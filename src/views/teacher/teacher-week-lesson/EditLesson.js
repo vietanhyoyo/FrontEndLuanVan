@@ -136,7 +136,6 @@ const EditLesson = (props) => {
     }
 
     useEffect(() => {
-        console.log("ksdfjdd");
         if (subjectList.length === 0) {
             getAPISubjectList();
         }

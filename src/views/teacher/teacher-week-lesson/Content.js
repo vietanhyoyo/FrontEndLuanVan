@@ -179,6 +179,14 @@ const Content = (props) => {
                     </Text>
                     <div ref={divRender}></div>
                     {convertHtml(lessonContent.text)}
+                    {
+                        !lessonContent.video ? <div></div>
+                            :
+                            <video
+                                src={`http://localhost:5002/?id=${lessonContent.video}`} controls
+                                style={{width: '100%'}}
+                            ></video>
+                    }
                     <EditContent lesson={props.lesson} reLoad={getAPI} grade={props.grade} />
                 </Box>
             </Box>

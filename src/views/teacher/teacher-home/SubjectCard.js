@@ -61,7 +61,7 @@ const SubjectCard = ({ isLoading, classInCharge }) => {
                                         mt: 0.45,
                                         mb: 0.45
                                     }}
-                                    primary={<Typography variant="h2">Nội dung dạy học</Typography>}
+                                    primary={<Typography variant="h2">Nội môn học của tuần</Typography>}
                                     secondary={
                                         <Typography
                                             variant="subtile2"
@@ -70,7 +70,7 @@ const SubjectCard = ({ isLoading, classInCharge }) => {
                                                 mt: 0.5
                                             }}
                                         >
-                                            -----------
+                                            quản lý môn học của bạn
                                         </Typography>
                                     }
                                 />

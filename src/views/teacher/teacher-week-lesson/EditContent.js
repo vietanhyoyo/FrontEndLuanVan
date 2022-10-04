@@ -17,6 +17,7 @@ import ReactQuill from "react-quill"
 import 'react-quill/dist/quill.snow.css'
 import SubjectService from 'services/objects/subject.service';
 import TeacherService from 'services/objects/teacher.service';
+import VideoService from 'services/media/video.service';
 
 // import 'draft-js/dist/Draft.css';
 
@@ -27,12 +28,14 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const lessonService = new LessonService();
 const subjectService = new SubjectService();
 const teacherService = new TeacherService();
+const videoService = new VideoService();
 
 const EditContent = (props) => {
     const [text, setText] = useState("");
     const [open, setOpen] = React.useState(false);
     const [subjectList, setSubjectList] = useState([]);
     const [gradeList, setGradeList] = useState([]);
+    const [file, setFile] = useState([]);
     const [editorState, setEditorState] = React.useState(
         () => EditorState.createEmpty(),
     );
@@ -48,7 +51,12 @@ const EditContent = (props) => {
 
     const handleSave = async () => {
         try {
-            const result = await lessonService.addLessonContent(text, props.lesson._id);
+            let videoPath = {path: ""};
+            if (file !== []) {
+                await uploadVideo(videoPath);
+            }
+            console.log(videoPath);
+            const result = await lessonService.addLessonContent(text, props.lesson._id, videoPath.path);
             props.reLoad();
         } catch (error) {
             console.log(error)
@@ -62,11 +70,15 @@ const EditContent = (props) => {
             const data = result.data;
             if (data !== "") {
                 setText(data.text);
+                if (data.video !== "" && data.video){
+                    setFile([{name: data.video}])
+                }
             }
         } catch (error) {
             console.log(error)
         }
     }
+    console.log(file.length)
 
     const getClassInCharge = async () => {
         try {
@@ -105,13 +117,32 @@ const EditContent = (props) => {
         }
     }
 
+    const uploadVideo = async (videoPath) => {
+        let formData = new FormData();
+
+        const config = {
+            header: { 'content-type': 'multipart/form-data' }
+        }
+        formData.append("file", file[0])
+
+        try {
+            const result = await videoService.upload(formData, config);
+            console.log(result.data.fileName)
+            videoPath.path = result.data.fileName;
+            return result.data.fileName;
+        } catch (error) {
+            console.log(error)
+            return -1;
+        }
+    }
+
     React.useEffect(() => {
         getAPI();
         getClassInCharge();
         if (subjectList.length === 0) {
             getAPISubjectList();
         }
-    },[open])
+    }, [open])
 
     return checkEdit() ? (<>
         <div>
@@ -152,6 +183,23 @@ const EditContent = (props) => {
                 <Box>
                     {/* <EditLink /> */}
                     <Box sx={{ margin: "2rem", height: "400px" }}>
+                        <Box sx={{ marginBottom: '20px', display: 'flex' }}>
+                            <Button variant="contained" component="label">
+                                Tải video mp4
+                                <input
+                                    hidden
+                                    accept="video/mp4"
+                                    type="file"
+                                    onChange={event => {
+                                        const fileData = event.target.files;
+                                        setFile(fileData);
+                                    }}
+                                />
+                            </Button>
+                            <Box sx={{ marginLeft: '10px', marginRight: '10px' }}>
+                                <Typography >{file.length !== 0 ? file[0].name : ""}</Typography>
+                            </Box>
+                        </Box>
                         {/* <CKEditor
                             editor={ClassicEditor}
                             data={text}
@@ -161,6 +209,7 @@ const EditContent = (props) => {
                             }}
                         /> */}
                         {/* <Editor editorState={editorState} onChange={setEditorState} /> */}
+                        {/* <video src={'http://localhost:5002'} controls></video> */}
                         <ReactQuill
                             theme='snow'
                             value={text}
@@ -211,6 +260,5 @@ const formats = [
 const propTypes = {
     placeholder: "Place holder",
 }
-
 
 export default EditContent;
